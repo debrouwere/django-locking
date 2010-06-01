@@ -7,8 +7,6 @@ You should take a look at this page first, as it'll answer most of your question
    :glob:
    
    *
-   
-Read more about this project at :doc:`credits`.
 
 Avoiding concurrent edits
 -------------------------
@@ -62,7 +60,7 @@ Soon:
 Installation
 ------------
 
-1. Downloading and installing the app and its dependencies (django-staticfiles, simplejson)
+1. Downloading and installing the app and its dependencies (automatically using easy_install / pip)
 2. adding the app to settings.py, and optionally specifying a LOCK_TIMEOUT
 3. configure ``django-staticfiles file serving`` for development (see the documentation here__)
 4. Adding locking to your models, updating the database models 

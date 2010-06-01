@@ -1,4 +1,5 @@
-## What the heck is this?
+What the heck is this?
+----------------------
 
 Django has seen great adoption in the content management sphere, especially among the newspaper crowd. One of the trickier things to get right, is to make sure that nobody steps on each others toes while editing and modifying existing content. Newspaper editors might not always be aware of what other editors are up to, and this goes double for distributed teams. When different people work on the same content, the one who saves last will win the day, while the other edits are overwritten.
 
@@ -6,8 +7,8 @@ Django has seen great adoption in the content management sphere, especially amon
 
 ## Documentation
 
-`django-locking` is well-documented. Check out the docs!
+django-locking is fairly well-documented. Check out the docs!
 
 ## License
 
-django-locking comes with the simplified BSD license, see the included LICENSE file for details.
+django-locking comes with a simplified BSD license, see the included LICENSE file for details.

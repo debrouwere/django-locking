@@ -1,0 +1,47 @@
+Downloading/unpacking sphinx-ext-autodoc
+  Getting page http://pypi.python.org/simple/sphinx-ext-autodoc
+  Could not fetch URL http://pypi.python.org/simple/sphinx-ext-autodoc: HTTP Error 404: Not Found
+  Will skip URL http://pypi.python.org/simple/sphinx-ext-autodoc when looking for download links for sphinx-ext-autodoc
+  Getting page http://pypi.python.org/simple/
+  URLs to search for versions for sphinx-ext-autodoc:
+  * http://pypi.python.org/simple/sphinx-ext-autodoc/
+  Getting page http://pypi.python.org/simple/sphinx-ext-autodoc/
+  Could not fetch URL http://pypi.python.org/simple/sphinx-ext-autodoc/: HTTP Error 404: Not Found
+  Will skip URL http://pypi.python.org/simple/sphinx-ext-autodoc/ when looking for download links for sphinx-ext-autodoc
+  Could not find any downloads that satisfy the requirement sphinx-ext-autodoc
+No distributions at all found for sphinx-ext-autodoc
+Exception information:
+Traceback (most recent call last):
+  File "/Library/Python/2.6/site-packages/pip.py", line 274, in main
+    self.run(options, args)
+  File "/Library/Python/2.6/site-packages/pip.py", line 431, in run
+    requirement_set.install_files(finder, force_root_egg_info=self.bundle)
+  File "/Library/Python/2.6/site-packages/pip.py", line 1813, in install_files
+    url = finder.find_requirement(req_to_install, upgrade=self.upgrade)
+  File "/Library/Python/2.6/site-packages/pip.py", line 1086, in find_requirement
+    raise DistributionNotFound('No distributions at all found for %s' % req)
+DistributionNotFound: No distributions at all found for sphinx-ext-autodoc
+------------------------------------------------------------
+/usr/local/bin/pip run on Tue Jun  1 15:31:20 2010
+Downloading/unpacking sphinx-ext-autodoc
+  Getting page http://pypi.python.org/simple/sphinx-ext-autodoc
+  Could not fetch URL http://pypi.python.org/simple/sphinx-ext-autodoc: HTTP Error 404: Not Found
+  Will skip URL http://pypi.python.org/simple/sphinx-ext-autodoc when looking for download links for sphinx-ext-autodoc
+  Getting page http://pypi.python.org/simple/
+Exception:
+Traceback (most recent call last):
+  File "/Library/Python/2.6/site-packages/pip.py", line 274, in main
+    self.run(options, args)
+  File "/Library/Python/2.6/site-packages/pip.py", line 431, in run
+    requirement_set.install_files(finder, force_root_egg_info=self.bundle)
+  File "/Library/Python/2.6/site-packages/pip.py", line 1813, in install_files
+    url = finder.find_requirement(req_to_install, upgrade=self.upgrade)
+  File "/Library/Python/2.6/site-packages/pip.py", line 1044, in find_requirement
+    url_name = self._find_url_name(Link(self.index_urls[0]), url_name, req) or req.url_name
+  File "/Library/Python/2.6/site-packages/pip.py", line 1132, in _find_url_name
+    for link in page.links:
+  File "/Library/Python/2.6/site-packages/pip.py", line 2285, in links
+    url = self.clean_link(urlparse.urljoin(self.url, url))
+  File "/Library/Python/2.6/site-packages/pip.py", line 2331, in clean_link
+    lambda match: '%%%2x' % ord(match.group(0)), url)
+KeyboardInterrupt

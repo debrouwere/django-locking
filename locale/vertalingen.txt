@@ -1,0 +1,5 @@
+Binnen vijf minuten verdwijnt het slot op dit artikel. Save het artikel en navigeer terug naar de wijzigingspagina om het artikel opnieuw voor %(minutes)s minuten te sluiten.
+
+<p class="gesloten">Dit artikel wordt momenteel door <em>%(user)s</em> aangepast. Je kan het lezen maar niet bewerken.</p>
+
+Nog %s minuten gesloten voor %s

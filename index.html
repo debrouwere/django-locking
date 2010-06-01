@@ -1,0 +1,207 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Concurrency control with django-locking &mdash; django-locking v0.2 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '#',
+        VERSION:     '0.2',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="django-locking v0.2 documentation" href="#" />
+    <link rel="next" title="The public API" href="api.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="api.html" title="The public API"
+             accesskey="N">next</a> |</li>
+        <li><a href="#">django-locking v0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="concurrency-control-with-django-locking">
+<h1>Concurrency control with django-locking<a class="headerlink" href="#concurrency-control-with-django-locking" title="Permalink to this headline">¶</a></h1>
+<p>You should take a look at this page first, as it&#8217;ll answer most of your questions, but here&#8217;s the TOC to the entire documentation:</p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="api.html">The public API</a><ul>
+<li class="toctree-l2"><a class="reference external" href="api.html#some-examples">Some examples</a></li>
+<li class="toctree-l2"><a class="reference external" href="api.html#methods-and-attributes">Methods and attributes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference external" href="changelog.html#id1">0.2</a></li>
+<li class="toctree-l2"><a class="reference external" href="changelog.html#id2">0.1</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="credits.html">About this project</a><ul>
+<li class="toctree-l2"><a class="reference external" href="credits.html#license">License</a></li>
+<li class="toctree-l2"><a class="reference external" href="credits.html#credits">Credits</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="design.html">Design considerations</a><ul>
+<li class="toctree-l2"><a class="reference external" href="design.html#pessimistic-versus-optimistic-locking">Pessimistic versus optimistic locking</a></li>
+<li class="toctree-l2"><a class="reference external" href="design.html#a-short-overview-of-different-locking-implementations">A short overview of different locking implementations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="developers.html">Developers&#8217; documentation</a><ul>
+<li class="toctree-l2"><a class="reference external" href="developers.html#the-public-api">The public API</a></li>
+<li class="toctree-l2"><a class="reference external" href="developers.html#running-the-test-suite">Running the test suite</a></li>
+<li class="toctree-l2"><a class="reference external" href="developers.html#building-the-documentation">Building the documentation</a></li>
+<li class="toctree-l2"><a class="reference external" href="developers.html#help-out">Help out</a></li>
+<li class="toctree-l2"><a class="reference external" href="developers.html#design-and-other-resources">Design and other resources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="ponies.html">Roadmap</a><ul>
+<li class="toctree-l2"><a class="reference external" href="ponies.html#things-that-are-planned">Things that are planned</a></li>
+<li class="toctree-l2"><a class="reference external" href="ponies.html#someday-maybe">Someday/maybe</a></li>
+</ul>
+</li>
+</ul>
+<div class="section" id="avoiding-concurrent-edits">
+<h2>Avoiding concurrent edits<a class="headerlink" href="#avoiding-concurrent-edits" title="Permalink to this headline">¶</a></h2>
+<p>Django has seen great adoption in the content management sphere, especially among the newspaper crowd. One of the trickier things to get right, is to make sure that nobody steps on each others toes while editing and modifying existing content. Newspaper editors might not always be aware of what other editors are up to, and this goes double for distributed teams. When different people work on the same content, the one who saves last will win the day, while the other edits are overwritten. <tt class="docutils literal"><span class="pre">django-locking</span></tt> <strong>provides a system that makes concurrent editing impossible, and informs users of what other users are working on and for how long that content will remain locked. Users can still read locked content, but cannot modify or save it.</strong></p>
+<img alt="_images/locked-list.png" src="_images/locked-list.png" />
+<p><tt class="docutils literal"><span class="pre">django-locking</span></tt> <strong>interfaces with the django admin</strong> application, but <strong>also provides an API</strong> that you can use in applications of your own.</p>
+<div class="section" id="looking-for-something-else">
+<h3>Looking for something else?<a class="headerlink" href="#looking-for-something-else" title="Permalink to this headline">¶</a></h3>
+<p>Do note that, in the context of this application, &#8216;locking&#8217; means preventing concurrent editing. You might also know this by the term &#8216;mutex&#8217; or the more colloquial &#8216;checkouts&#8217;. If you ended up here while looking for an application that provides permission-based access to certain content, read up on <em>row-level permissions</em> and <em>granular permissions</em>. Also check out <a class="reference external" href="http://code.google.com/p/django-lock/">django-lock</a>, <a class="reference external" href="http://github.com/f4nt/django-granular-permissions">django-granular-permissions</a> and similar apps.</p>
+</div>
+<div class="section" id="beta-quality">
+<h3>Beta-quality<a class="headerlink" href="#beta-quality" title="Permalink to this headline">¶</a></h3>
+<p>While <tt class="docutils literal"><span class="pre">django-locking</span></tt> has seen a little production use and has a fair amount of unit-tests, please be advised that at this moment it is still beta-quality software. However, I&#8217;m quite responsive when it comes to the <a class="reference external" href="http://github.com/stdbrouw/django-locking/issues">GitHub issue tracker</a>, and you should also feel free to contact me more directly, either <a class="reference external" href="http://github.com/stdbrouw">through GitHub or by e-mailing</a>.</p>
+</div>
+</div>
+<div class="section" id="features">
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>admin integration</li>
+<li>django-locking tells you right from the start if content is locked, rather than when you try to save and override somebody else&#8217;s content</li>
+<li>lock expiration: leaving a browser window open doesn&#8217;t lock up content indefinitely</li>
+<li>other users can still view locked content, they just can&#8217;t edit the stuff somebody else is working on</li>
+<li>configurable: you can define the amount of minutes before the app auto-expires content locks</li>
+<li>users receive an alert when a lock is about to expire</li>
+<li>A public API for coders who want to integrate their apps with <tt class="docutils literal"><span class="pre">django-locking</span></tt>. See <a class="reference external" href="developers.html"><em>Developers&#8217; documentation</em></a> and <a class="reference external" href="api.html"><em>The public API</em></a>.</li>
+<li>well-documented</li>
+</ul>
+<p>Soon:</p>
+<ul class="simple">
+<li>currently only supports soft locks (javascript), but soon it&#8217;ll do hard locks as well (see <a class="reference external" href="design.html"><em>Design considerations</em></a>)</li>
+<li>manual lock overrides for admins</li>
+<li>some other things (see <a class="reference external" href="ponies.html"><em>Roadmap</em></a>)</li>
+</ul>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Downloading and installing the app and its dependencies (automatically using easy_install / pip)</li>
+<li>adding the app to settings.py, and optionally specifying a LOCK_TIMEOUT</li>
+<li>configure <tt class="docutils literal"><span class="pre">django-staticfiles</span> <span class="pre">file</span> <span class="pre">serving</span></tt> for development (see the documentation <a class="reference external" href="http://bitbucket.org/jezdez/django-staticfiles/src#serving-static-files-during-development">here</a>)</li>
+<li>Adding locking to your models, updating the database models</li>
+<li>Activating locking in the admin.</li>
+<li>Using the locking API</li>
+<li>Using django-locking in production (django-staticfiles)</li>
+</ol>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>Once you&#8217;ve installed <tt class="docutils literal"><span class="pre">django-locking</span></tt> and have one or a few models that have <tt class="docutils literal"><span class="pre">LockableModel</span></tt> as a base class, you&#8217;re set to go.</p>
+<img alt="_images/locked-editscreen.png" src="_images/locked-editscreen.png" />
+<p>Below are a few guidelines for advanced usage.</p>
+<ul class="simple">
+<li>By default, <tt class="docutils literal"><span class="pre">django-locking</span></tt> uses <strong>soft locks</strong>. Read more about different methods of locking over at <a class="reference external" href="design.html"><em>Design considerations</em></a>.</li>
+<li>When integrating with your own applications, you should take care when overriding certain methods, specifically <tt class="docutils literal"><span class="pre">LockableModel.save</span></tt> and <tt class="docutils literal"><span class="pre">LockableAdmin.changelist_view</span></tt>. Make sure to call <tt class="docutils literal"><span class="pre">super</span></tt> if you want to maintain the default behavior of <tt class="docutils literal"><span class="pre">django-locking</span></tt>.</li>
+</ul>
+<p>Learn more about best practices when using super <a class="reference external" href="http://fuhm.net/super-harmful/">here</a>. Chiefly, do not assume that subclasses won&#8217;t need or superclasses won&#8217;t pass any extra arguments. You will want your overrides to look like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="o">*</span><span class="n">vargs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="nb">super</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="o">*</span><span class="n">vargs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="#">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">Concurrency control with django-locking</a><ul>
+<li><a class="reference external" href="#avoiding-concurrent-edits">Avoiding concurrent edits</a><ul>
+<li><a class="reference external" href="#looking-for-something-else">Looking for something else?</a></li>
+<li><a class="reference external" href="#beta-quality">Beta-quality</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#features">Features</a></li>
+<li><a class="reference external" href="#installation">Installation</a></li>
+<li><a class="reference external" href="#usage">Usage</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Next topic</h4>
+            <p class="topless"><a href="api.html"
+                                  title="next chapter">The public API</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/index.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="api.html" title="The public API"
+             >next</a> |</li>
+        <li><a href="#">django-locking v0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2010, Stijn Debrouwere.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+    </div>
+  </body>
+</html>

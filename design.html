@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Design considerations &mdash; django-locking v0.2 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '#',
+        VERSION:     '0.2',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="django-locking v0.2 documentation" href="index.html" />
+    <link rel="next" title="Developers’ documentation" href="developers.html" />
+    <link rel="prev" title="About this project" href="credits.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="developers.html" title="Developers’ documentation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="credits.html" title="About this project"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">django-locking v0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="design-considerations">
+<h1>Design considerations<a class="headerlink" href="#design-considerations" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="pessimistic-versus-optimistic-locking">
+<h2>Pessimistic versus optimistic locking<a class="headerlink" href="#pessimistic-versus-optimistic-locking" title="Permalink to this headline">¶</a></h2>
+<p>Essentially, optimistic concurrency control will either give the user a warning or throw an exception whenever they try to overwrite a piece of content that has been updated since they last opened it for editing. Pessimistic concurrency control will actually lock the content for one specific user, so that nobody else can edit the content while he or she is working on it.</p>
+<p>An optimistic system is easier to implement, but has the disadvantage of only preventing <em>overwrites</em>, not the actual concurrent editing &#8211; which can be a pretty frustrating experience and a time waster for editors. Actual locking, that is, pessimistic concurrency control, can be a bit tricky to implement. Locks can often stay closed indefinitely or longer than expected because</p>
+<ul class="simple">
+<li>a user&#8217;s browser crashes before he navigates away from the page</li>
+<li>when a user leaves an edit screen open in a neglected tab</li>
+<li>the user navigates to another website without first saving</li>
+</ul>
+<p>Any good locking system thus should be able to <strong>unlock</strong> the page even if the user navigates away from the website, but also has to implement <strong>lock expiry</strong> to handle the aforementioned edge cases. <tt class="docutils literal"><span class="pre">django-locking</span></tt> does both. In addition, it warns users when their lock is about to expire, so they can easily save their progress and edit the content again to initiate a new lock.</p>
+</div>
+<div class="section" id="a-short-overview-of-different-locking-implementations">
+<h2>A short overview of different locking implementations<a class="headerlink" href="#a-short-overview-of-different-locking-implementations" title="Permalink to this headline">¶</a></h2>
+<p>Soft locks make sure to avoid concurrent edits in the Django admin interface, and also provide an interface by which you can check programatically if a piece of content is currently locked and act accordingly. However, a soft locking mechanism doesn&#8217;t actually raise any exception when trying to save locked content, it only stops the save from occuring in the front-end of the website.</p>
+<p>While soft locking may seem a little weird, it actually has a bunch of benefits. E.g. if you operate a pub review website that allows users to update the pricing of beer at different establishments, you may want to prevent an editor from updating a pub review when somebody else is updating the page, but may nevertheless still want to allow visitors to the site to update the price of a pint of beer, even though <tt class="docutils literal"><span class="pre">beer_price</span></tt> is an attribute on the same <tt class="docutils literal"><span class="pre">PubReview</span></tt> model.</p>
+<p>However, sometimes, your application really does need to prevent the <tt class="docutils literal"><span class="pre">Model.save</span></tt> method from executing, and throw an exception when anybody except the person who initiated the lock tries to save. We&#8217;ll call this <strong>hard locking</strong> In some cases, namely if other non-Django applications interface directly with your database, you might even want <strong>database-level row locking</strong>.</p>
+<p><tt class="docutils literal"><span class="pre">django-locking</span></tt> currently does not support hard locks or database-level locks. Hard locks will be implemented soon (they&#8217;re trivial to add). Database-level row locking might be added in the future, but is more difficult to get right, as the app has to ascertain that your database supports it. E.g. on MySQL <tt class="docutils literal"><span class="pre">InnoDB</span></tt> tables do, but <tt class="docutils literal"><span class="pre">MyISAM</span></tt> tables don&#8217;t; sqlite has no row-level locking whatsoever but PostgreSQL does.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">Design considerations</a><ul>
+<li><a class="reference external" href="#pessimistic-versus-optimistic-locking">Pessimistic versus optimistic locking</a></li>
+<li><a class="reference external" href="#a-short-overview-of-different-locking-implementations">A short overview of different locking implementations</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="credits.html"
+                                  title="previous chapter">About this project</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="developers.html"
+                                  title="next chapter">Developers&#8217; documentation</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/design.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="developers.html" title="Developers’ documentation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="credits.html" title="About this project"
+             >previous</a> |</li>
+        <li><a href="index.html">django-locking v0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2010, Stijn Debrouwere.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+    </div>
+  </body>
+</html>

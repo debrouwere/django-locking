@@ -20,8 +20,8 @@ def lock(request, app, model, id):
     logging.info('hallo daar')
 
     obj = lockable_models[app][model].objects.get(pk=id)
-    # geen bestaande sloten overschrijven, tenzij als het komt van de gebruiker
-    # die het huidige slot heeft geactiveerd
+    # don't overwrite any existing locks, unless the unlock request comes
+    # specifically from the user who activated the current lock.
     if obj.lock_applies_to(request.user):
         return HttpResponse(status=403)
     else:

@@ -50,7 +50,8 @@ class LockableModel(models.Model):
         # saving to apply the lock!
         self._initiate_lock = True
         
-        # False om te openen, een geldige user om te sluiten
+        # False opens up the lock, a valid user closes it.
+        # I'm not too happy with this as the API, and will probably refactor this.
         if isinstance(user, auth.User):
             self.locked_at = datetime.today()
             self.locked_by = user
@@ -80,7 +81,7 @@ class LockableModel(models.Model):
         """
         docstring todo
         """
-        # TO FIX: dit gaat niet werken, waar!
+        # TO FIX: this obviously won't work.
         self.lock_for(False)
     
     def lock_applies_to(self, user):

@@ -37,8 +37,6 @@ class LockableAdmin(admin.ModelAdmin):
         
         return forms.Media(css=css, js=js)
     
-    # niet vergeten js en dit hier te documenteren, 
-    # gezien overrides in subklassen zonder supers het anders kapot zouden kunnen maken
     def changelist_view(self, request, extra_context=None):
         # we need the request objects in a few places where it's usually not present, 
         # so we're tacking it on to the LockableAdmin class

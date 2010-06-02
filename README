@@ -5,10 +5,12 @@ Django has seen great adoption in the content management sphere, especially amon
 
 `django-locking` provides a system that makes concurrent editing impossible, and informs users of what other users are working on and for how long that content will remain locked. Users can still read locked content, but cannot modify or save it.
 
-## Documentation
+Documentation
+-------------
 
 django-locking is fairly well-documented. Check out the docs!
 
-## License
+License
+-------
 
 django-locking comes with a simplified BSD license, see the included LICENSE file for details.

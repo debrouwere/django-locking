@@ -8,9 +8,9 @@ from locking import models, views, LOCK_TIMEOUT
 from locking.tests.utils import TestCase
 from locking.tests.models import Story
 
+class AppTestCase(TestCase):
+    """ Groovy test madness. """
 
-
-class AppTests(TestCase):
     def setUp(self):
         self.story = Story.objects.all()[0]
         users = User.objects.all()
@@ -83,7 +83,7 @@ class AppTests(TestCase):
         self.assertTrue(models.Story in lockable_models)
         self.assertTrue(models.Unlockable not in lockable_models)
 
-class BrowserTests(TestCase):
+class BrowserTestCase(TestCase):
     apps = ('locking.tests', 'django.contrib.auth', 'django.contrib.admin', )
 
     def login(self):

@@ -44,18 +44,17 @@ Features
 * other users can still view locked content, they just can't edit the stuff somebody else is working on
 * configurable: you can define the amount of minutes before the app auto-expires content locks
 * users receive an alert when a lock is about to expire
+
+Some other things you might like to know about: 
+
+* a choice between soft locks (only enforced at the front-end level) and hard locks (enforced at the ORM level -- raising an error when trying to save a locked object). (See :doc:`design`)
 * A public API for coders who want to integrate their apps with ``django-locking``. See :doc:`developers` and :doc:`api`.
 * well-documented
+* verbose (i.e. a lot of logging to ``sys.stdout``), so you can see what's going on behind the screen
 
-Soon: 
-
-* currently only supports soft locks (javascript), but soon it'll do hard locks as well (see :doc:`design`)
-* manual lock overrides for admins
-* some other things (see :doc:`ponies`)
+Test coverage is still subpar but getting better -- this currently has priority. For other stuff on the roadmap, see :doc:`ponies`.
 
 .. django-locking is carefully unit-tested (X% code coverage with over Y tests that span more than Z lines of code). Developers expanding on the code or debugging will appreciate that most of its functionality is log-enabled, so you can see what's going on behind the screen.
-
-.. Additionally, it has a public API, is carefully unit-tested and is log-enabled so you can see what's going on behind the screen.
 
 Installation
 ------------

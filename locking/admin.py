@@ -42,18 +42,31 @@ class LockableAdmin(admin.ModelAdmin):
         # so we're tacking it on to the LockableAdmin class
         self.request = request
         return super(LockableAdmin, self).changelist_view(request, extra_context)
+
+    def save_model(self, request, obj, form, change):
+        # object creation doesn't need/have locking in place
+        if obj.pk:
+            obj.unlock_for(request.user)
+        obj.save()
         
     def lock(self, obj):
         print obj.is_locked
         if obj.is_locked:
             seconds_remaining = obj.lock_seconds_remaining
             minutes_remaining = seconds_remaining/60
-            locked_until = _("Still locked for %s minutes by %s") % (minutes_remaining, obj.locked_by)
-        
+            locked_until = _("Still locked for %s minutes by %s") \
+                % (minutes_remaining, obj.locked_by)
             if self.request.user == obj.locked_by: 
-                return '<img src="%slocking/img/page_edit.png" title="%s" />' % (settings.MEDIA_URL, locked_until)
+                locked_until_self = _("You have a lock on this article for %s more minutes.") \
+                    % (minutes_remaining)
+                return '<img src="%slocking/img/page_edit.png" title="%s" />' \
+                    % (settings.MEDIA_URL, locked_until_self)
             else:
-                return '<img src="%slocking/img/lock.png" title="%s" />' % (settings.MEDIA_URL, locked_until)
+                locked_until = _("Still locked for %s minutes by %s") \
+                    % (minutes_remaining, obj.locked_by)
+                return '<img src="%slocking/img/lock.png" title="%s" />' \
+                    % (settings.MEDIA_URL, locked_until)
+
         else:
             return ''
     lock.allow_tags = True

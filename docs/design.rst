@@ -27,4 +27,4 @@ However, sometimes, your application really does need to prevent the ``Model.sav
 Implementation in ``django-locking``
 ''''''''''''''''''''''''''''''''''''
 
-``django-locking`` currently does not support hard locks or database-level locks. Hard locks will be implemented soon (they're trivial to add). Database-level row locking might be added in the future, but is more difficult to get right, as the app has to ascertain that your database supports it. E.g. on MySQL ``InnoDB`` tables do, but ``MyISAM`` tables don't; sqlite has no row-level locking whatsoever but PostgreSQL does.
+``django-locking`` currently supports both soft and hard locks, see :doc:`api`. Database-level row locking might be added in the future, but is more difficult to get right, as the app has to ascertain that your database supports it and get around any quirks and caveats that might apply to each different database. E.g. on MySQL ``InnoDB`` tables do, but ``MyISAM`` tables don't; sqlite has no row-level locking whatsoever but PostgreSQL does.

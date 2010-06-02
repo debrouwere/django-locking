@@ -4,54 +4,53 @@ from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 
 from locking.decorators import user_may_change_model, is_lockable, log
-from locking import utils, LOCK_TIMEOUT, logging
+from locking import utils, LOCK_TIMEOUT, logging, models
 
 """
 These views are called from javascript to open and close assets (objects), in order
 to prevent concurrent editing.
 """
 
-lockable_models = utils.gather_lockable_models()
-
 @log
 @user_may_change_model
 @is_lockable
 def lock(request, app, model, id):
-    logging.info('hallo daar')
+    obj = utils.gather_lockable_models()[app][model].objects.get(pk=id)
 
-    obj = lockable_models[app][model].objects.get(pk=id)
-    # don't overwrite any existing locks, unless the unlock request comes
-    # specifically from the user who activated the current lock.
-    if obj.lock_applies_to(request.user):
-        return HttpResponse(status=403)
-    else:
+    try:
         obj.lock_for(request.user)
         obj.save()
         return HttpResponse(status=200)
+    except models.ObjectLockedError:
+        # The user tried to overwrite an existing lock by another user.
+        # No can do, pal!
+        return HttpResponse(status=403)
 
 @log
 @user_may_change_model
 @is_lockable
 def unlock(request, app, model, id):
-    obj = lockable_models[app][model].objects.get(pk=id)
+    obj = utils.gather_lockable_models()[app][model].objects.get(pk=id)
 
     # Users who don't have exclusive access to an object anymore may still
     # request we unlock an object. This happens e.g. when a user navigates
     # away from an edit screen that's been open for very long.
-    # When this happens, we just ignore the request. That way, any new lock
-    # that may since have been put in place by another user won't be
-    # unlocked.
-    if obj.unlock_for(request.user):
+    # When this happens, LockableModel.unlock_for will throw an exception, 
+    # and we just ignore the request.
+    # That way, any new lock that may since have been put in place by another 
+    # user won't get accidentally overwritten.
+    try:
+        obj.unlock_for(request.user)
         obj.save()    
         return HttpResponse(status=200)
-    else:
+    except models.ObjectLockedError:
         return HttpResponse(status=403)
 
 @log
 @user_may_change_model
 @is_lockable
 def is_locked(request, app, model, id):    
-    obj = lockable_models[app][model].objects.get(pk=id)
+    obj = utils.gather_lockable_models()[app][model].objects.get(pk=id)
 
     response = simplejson.dumps({
         "is_active": obj.is_locked,

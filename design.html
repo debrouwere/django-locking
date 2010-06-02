@@ -31,6 +31,9 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
           <a href="developers.html" title="Developers’ documentation"
              accesskey="N">next</a> |</li>
         <li class="right" >
@@ -49,7 +52,7 @@
 <h1>Design considerations<a class="headerlink" href="#design-considerations" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="pessimistic-versus-optimistic-locking">
 <h2>Pessimistic versus optimistic locking<a class="headerlink" href="#pessimistic-versus-optimistic-locking" title="Permalink to this headline">¶</a></h2>
-<p>Essentially, optimistic concurrency control will either give the user a warning or throw an exception whenever they try to overwrite a piece of content that has been updated since they last opened it for editing. Pessimistic concurrency control will actually lock the content for one specific user, so that nobody else can edit the content while he or she is working on it.</p>
+<p>Essentially, <strong>optimistic concurrency control</strong> will either give the user a warning or throw an exception whenever they try to overwrite a piece of content that has been updated since they last opened it for editing. <strong>Pessimistic concurrency control</strong> will actually lock the content for one specific user, so that nobody else can edit the content while he or she is working on it.</p>
 <p>An optimistic system is easier to implement, but has the disadvantage of only preventing <em>overwrites</em>, not the actual concurrent editing &#8211; which can be a pretty frustrating experience and a time waster for editors. Actual locking, that is, pessimistic concurrency control, can be a bit tricky to implement. Locks can often stay closed indefinitely or longer than expected because</p>
 <ul class="simple">
 <li>a user&#8217;s browser crashes before he navigates away from the page</li>
@@ -60,10 +63,13 @@
 </div>
 <div class="section" id="a-short-overview-of-different-locking-implementations">
 <h2>A short overview of different locking implementations<a class="headerlink" href="#a-short-overview-of-different-locking-implementations" title="Permalink to this headline">¶</a></h2>
-<p>Soft locks make sure to avoid concurrent edits in the Django admin interface, and also provide an interface by which you can check programatically if a piece of content is currently locked and act accordingly. However, a soft locking mechanism doesn&#8217;t actually raise any exception when trying to save locked content, it only stops the save from occuring in the front-end of the website.</p>
-<p>While soft locking may seem a little weird, it actually has a bunch of benefits. E.g. if you operate a pub review website that allows users to update the pricing of beer at different establishments, you may want to prevent an editor from updating a pub review when somebody else is updating the page, but may nevertheless still want to allow visitors to the site to update the price of a pint of beer, even though <tt class="docutils literal"><span class="pre">beer_price</span></tt> is an attribute on the same <tt class="docutils literal"><span class="pre">PubReview</span></tt> model.</p>
+<p>Soft locks make sure to avoid concurrent edits in the Django admin interface, and also provide an interface by which you can check programatically if a piece of content is currently locked and act accordingly. However, a <strong>soft locking</strong> mechanism doesn&#8217;t actually raise any exception when trying to save locked content, it only stops the save from occuring in the front-end of the website.</p>
+<p>While soft locking may seem a little weird, it actually has benefits over tougher approaches to locking. E.g. if you operate a pub review website that allows users to update the pricing of beer at different establishments, you may want to prevent an editor from updating a pub review when somebody else is updating the page, but may nevertheless still want to allow visitors to the site to update the price of a pint of beer, even though <tt class="docutils literal"><span class="pre">beer_price</span></tt> is an attribute on the same <tt class="docutils literal"><span class="pre">PubReview</span></tt> model.</p>
 <p>However, sometimes, your application really does need to prevent the <tt class="docutils literal"><span class="pre">Model.save</span></tt> method from executing, and throw an exception when anybody except the person who initiated the lock tries to save. We&#8217;ll call this <strong>hard locking</strong> In some cases, namely if other non-Django applications interface directly with your database, you might even want <strong>database-level row locking</strong>.</p>
-<p><tt class="docutils literal"><span class="pre">django-locking</span></tt> currently does not support hard locks or database-level locks. Hard locks will be implemented soon (they&#8217;re trivial to add). Database-level row locking might be added in the future, but is more difficult to get right, as the app has to ascertain that your database supports it. E.g. on MySQL <tt class="docutils literal"><span class="pre">InnoDB</span></tt> tables do, but <tt class="docutils literal"><span class="pre">MyISAM</span></tt> tables don&#8217;t; sqlite has no row-level locking whatsoever but PostgreSQL does.</p>
+<div class="section" id="implementation-in-django-locking">
+<h3>Implementation in <tt class="docutils literal"><span class="pre">django-locking</span></tt><a class="headerlink" href="#implementation-in-django-locking" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">django-locking</span></tt> currently supports both soft and hard locks, see <a class="reference external" href="api.html"><em>The public API</em></a>. Database-level row locking might be added in the future, but is more difficult to get right, as the app has to ascertain that your database supports it and get around any quirks and caveats that might apply to each different database. E.g. on MySQL <tt class="docutils literal"><span class="pre">InnoDB</span></tt> tables do, but <tt class="docutils literal"><span class="pre">MyISAM</span></tt> tables don&#8217;t; sqlite has no row-level locking whatsoever but PostgreSQL does.</p>
+</div>
 </div>
 </div>
 
@@ -77,7 +83,10 @@
             <ul>
 <li><a class="reference external" href="#">Design considerations</a><ul>
 <li><a class="reference external" href="#pessimistic-versus-optimistic-locking">Pessimistic versus optimistic locking</a></li>
-<li><a class="reference external" href="#a-short-overview-of-different-locking-implementations">A short overview of different locking implementations</a></li>
+<li><a class="reference external" href="#a-short-overview-of-different-locking-implementations">A short overview of different locking implementations</a><ul>
+<li><a class="reference external" href="#implementation-in-django-locking">Implementation in <tt class="docutils literal"><span class="pre">django-locking</span></tt></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -116,6 +125,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="developers.html" title="Developers’ documentation"
              >next</a> |</li>

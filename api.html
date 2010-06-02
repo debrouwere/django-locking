@@ -31,6 +31,9 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
           <a href="changelog.html" title="Changelog"
              accesskey="N">next</a> |</li>
         <li class="right" >
@@ -83,9 +86,113 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="methods-and-attributes">
-<h2>Methods and attributes<a class="headerlink" href="#methods-and-attributes" title="Permalink to this headline">¶</a></h2>
-<p>... are not quite documented yet. Expect this soon, and <a class="reference external" href="http://github.com/stdbrouw">badger me</a> about it if it&#8217;s taking too long.</p>
+<div class="section" id="module-locking.models">
+<h2>Methods and attributes<a class="headerlink" href="#module-locking.models" title="Permalink to this headline">¶</a></h2>
+<p>Most functionality and domain logic of <tt class="docutils literal"><span class="pre">django-locking</span></tt> resides in the <tt class="docutils literal"><span class="pre">LockableModel</span></tt>, with the views providing little more than an interface to the web.</p>
+<dl class="class">
+<dt id="locking.models.LockableModel">
+<em class="property">class </em><tt class="descclassname">locking.models.</tt><tt class="descname">LockableModel</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#locking.models.LockableModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref docutils literal"><span class="pre">django.db.models.base.Model</span></tt></p>
+<dl class="class">
+<dt id="locking.models.LockableModel.Meta">
+<em class="property">class </em><tt class="descname">Meta</tt><a class="headerlink" href="#locking.models.LockableModel.Meta" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="locking.models.LockableModel.is_locked">
+<tt class="descclassname">LockableModel.</tt><tt class="descname">is_locked</tt><a class="headerlink" href="#locking.models.LockableModel.is_locked" title="Permalink to this definition">¶</a></dt>
+<dd>A read-only property that returns True or False.
+Works by calculating if the last lock (self.locked_at) has timed out or not.</dd></dl>
+
+<dl class="method">
+<dt id="locking.models.LockableModel.is_locked_by">
+<tt class="descclassname">LockableModel.</tt><tt class="descname">is_locked_by</tt><big>(</big><em>user</em><big>)</big><a class="headerlink" href="#locking.models.LockableModel.is_locked_by" title="Permalink to this definition">¶</a></dt>
+<dd>Returns True or False. Can be used to test whether this object is locked by
+a certain user. The <tt class="docutils literal"><span class="pre">lock_applies_to</span></tt> method and the <tt class="docutils literal"><span class="pre">is_locked</span></tt> and 
+<tt class="docutils literal"><span class="pre">locked_by</span></tt> attributes are probably more useful for most intents and
+purposes.</dd></dl>
+
+<dl class="method">
+<dt id="locking.models.LockableModel.lock_applies_to">
+<tt class="descclassname">LockableModel.</tt><tt class="descname">lock_applies_to</tt><big>(</big><em>user</em><big>)</big><a class="headerlink" href="#locking.models.LockableModel.lock_applies_to" title="Permalink to this definition">¶</a></dt>
+<dd>A lock does not apply to the user who initiated the lock. Thus, 
+<tt class="docutils literal"><span class="pre">lock_applies_to</span></tt> is used to ascertain whether a user is allowed
+to edit a locked object.</dd></dl>
+
+<dl class="method">
+<dt id="locking.models.LockableModel.lock_for">
+<tt class="descclassname">LockableModel.</tt><tt class="descname">lock_for</tt><big>(</big><em>user</em>, <em>hard_lock=False</em><big>)</big><a class="headerlink" href="#locking.models.LockableModel.lock_for" title="Permalink to this definition">¶</a></dt>
+<dd><p>Together with <tt class="docutils literal"><span class="pre">unlock_for</span></tt> this is probably the most important method 
+on this model. If applicable to your use-case, you should lock for a specific 
+user; that way, we can throw an exception when another user tries to unlock
+an object they haven&#8217;t locked themselves.</p>
+<p>When using soft locks (the default), any process can still use the save method
+on this object. If you set <tt class="docutils literal"><span class="pre">hard_lock=True</span></tt>, trying to save an object
+without first unlocking will raise an <tt class="docutils literal"><span class="pre">ObjectLockedError</span></tt>.</p>
+<p>Don&#8217;t use hard locks unless you really need them. See <a class="reference external" href="design.html"><em>Design considerations</em></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="locking.models.LockableModel.lock_seconds_remaining">
+<tt class="descclassname">LockableModel.</tt><tt class="descname">lock_seconds_remaining</tt><a class="headerlink" href="#locking.models.LockableModel.lock_seconds_remaining" title="Permalink to this definition">¶</a></dt>
+<dd><p>A read-only property that returns the amount of seconds remaining before
+any existing lock times out.</p>
+<p>May or may not return a negative number if the object is currently unlocked.
+That number represents the amount of seconds since the last lock expired.</p>
+<p>If you want to extend a lock beyond its current expiry date, initiate a new
+lock using the <tt class="docutils literal"><span class="pre">lock_for</span></tt> method.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="locking.models.LockableModel.lock_type">
+<tt class="descclassname">LockableModel.</tt><tt class="descname">lock_type</tt><a class="headerlink" href="#locking.models.LockableModel.lock_type" title="Permalink to this definition">¶</a></dt>
+<dd>Returns the type of lock that is currently active. Either
+<tt class="docutils literal"><span class="pre">hard</span></tt>, <tt class="docutils literal"><span class="pre">soft</span></tt> or <tt class="xref docutils literal"><span class="pre">None</span></tt>. Read-only.</dd></dl>
+
+<dl class="attribute">
+<dt id="locking.models.LockableModel.locked_at">
+<tt class="descclassname">LockableModel.</tt><tt class="descname">locked_at</tt><a class="headerlink" href="#locking.models.LockableModel.locked_at" title="Permalink to this definition">¶</a></dt>
+<dd>A simple <tt class="docutils literal"><span class="pre">DateTimeField</span></tt> that is the heart of the locking mechanism. Read-only.</dd></dl>
+
+<dl class="attribute">
+<dt id="locking.models.LockableModel.locked_by">
+<tt class="descclassname">LockableModel.</tt><tt class="descname">locked_by</tt><a class="headerlink" href="#locking.models.LockableModel.locked_by" title="Permalink to this definition">¶</a></dt>
+<dd><tt class="docutils literal"><span class="pre">locked_by</span></tt> is a foreign key to <tt class="docutils literal"><span class="pre">auth.User</span></tt>. The <tt class="docutils literal"><span class="pre">related_name</span></tt> on the 
+User object is <tt class="docutils literal"><span class="pre">working_on_%(class)s</span></tt>. Read-only.</dd></dl>
+
+<dl class="method">
+<dt id="locking.models.LockableModel.save">
+<tt class="descclassname">LockableModel.</tt><tt class="descname">save</tt><big>(</big><em>*vargs</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#locking.models.LockableModel.save" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="locking.models.LockableModel.unlock">
+<tt class="descclassname">LockableModel.</tt><tt class="descname">unlock</tt><big>(</big><big>)</big><a class="headerlink" href="#locking.models.LockableModel.unlock" title="Permalink to this definition">¶</a></dt>
+<dd>This method serves solely to allow the application itself or admin users
+to do manual lock overrides, even if they haven&#8217;t initiated these
+locks themselves. Otherwise, use <tt class="docutils literal"><span class="pre">unlock_for</span></tt>.</dd></dl>
+
+<dl class="method">
+<dt id="locking.models.LockableModel.unlock_for">
+<tt class="descclassname">LockableModel.</tt><tt class="descname">unlock_for</tt><big>(</big><em>user</em><big>)</big><a class="headerlink" href="#locking.models.LockableModel.unlock_for" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <tt class="docutils literal"><span class="pre">lock_for</span></tt>. If the lock was initiated for a specific user, 
+unlocking will fail unless that same user requested the unlocking. 
+Manual overrides should use the <tt class="docutils literal"><span class="pre">unlock</span></tt> method instead.</p>
+<p>Will raise a ObjectLockedError exception when the current user isn&#8217;t authorized to
+unlock the object.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="locking.models.ObjectLockedError">
+<em class="property">exception </em><tt class="descclassname">locking.models.</tt><tt class="descname">ObjectLockedError</tt><a class="headerlink" href="#locking.models.ObjectLockedError" title="Permalink to this definition">¶</a></dt>
+<dd>Bases: <tt class="xref docutils literal"><span class="pre">exceptions.IOError</span></tt></dd></dl>
+
+</div>
+<div class="section" id="nomenclature">
+<h2>Nomenclature<a class="headerlink" href="#nomenclature" title="Permalink to this headline">¶</a></h2>
+<p><tt class="docutils literal"><span class="pre">django-locking</span></tt> tries to be consistent in its terminology, even if it doesn&#8217;t always succeed. An object can be <strong>locked</strong> and <strong>unlocked</strong>, in which case we&#8217;ve <strong>disengaged</strong> a lock. A lock can <strong>apply</strong> to a certain user, or not apply because it was <strong>initiated</strong> by that same user. A lock will <strong>expire</strong> once it has been in place longer than a predefined <strong>timeout</strong>.</p>
 </div>
 </div>
 
@@ -99,7 +206,8 @@
             <ul>
 <li><a class="reference external" href="#">The public API</a><ul>
 <li><a class="reference external" href="#some-examples">Some examples</a></li>
-<li><a class="reference external" href="#methods-and-attributes">Methods and attributes</a></li>
+<li><a class="reference external" href="#module-locking.models">Methods and attributes</a></li>
+<li><a class="reference external" href="#nomenclature">Nomenclature</a></li>
 </ul>
 </li>
 </ul>
@@ -138,6 +246,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="changelog.html" title="Changelog"
              >next</a> |</li>

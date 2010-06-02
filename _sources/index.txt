@@ -60,27 +60,42 @@ Soon:
 Installation
 ------------
 
-1. Downloading and installing the app and its dependencies (automatically using easy_install / pip)
-2. adding the app to settings.py, and optionally specifying a LOCK_TIMEOUT
-3. configure ``django-staticfiles file serving`` for development (see the documentation here__)
-4. Adding locking to your models, updating the database models 
-5. Activating locking in the admin.
-6. Using the locking API
-7. Using django-locking in production (django-staticfiles)
+#. This app will not be available on PyPI until version 0.3 at the earliest. In the meanwhile, just download the package and install it using ``python setup.py install``.
+#. Add ``locking`` to your ``INSTALLED_APPS`` in the ``settings.py`` to your project.
+#. You may optionally specify a ``LOCK_TIMEOUT`` in ``settings.py``, which should be in seconds. It defaults to half an hour (1800 seconds).
+#. Configure your development environment for file serving using ``django-staticfiles``. See the documentation here__.
+#. Add ``(r'^ajax/admin/', include('locking.urls'))`` to your urlconf (``urls.py``). You may use any base url, ``ajax/admin/`` is just an example.
+#. Specify ``locking.models.LockableModel`` as a base class for any model that requires locking. If you're doing this on an existing model, be aware that ``syncdb`` won't work -- you'll either need South or do the migration manually. (``syncdb`` doesn't add new fields to any existing table.)
+#. To enable locking in the admin interface, specify ``locking.admin.LockableAdmin`` as the base class for your own ModelAdmins.
 
 .. __: http://bitbucket.org/jezdez/django-staticfiles/src#serving-static-files-during-development
+
+Want to know more about the public API? :doc:`api`
+
+Something not working? Contact `the author`__ or `open an issue on GitHub`__.
+
+.. __: http://github.com/stdbrouw
+
+.. __: http://github.com/stdbrouw/django-locking/issues
 
 Usage
 -----
 
-Once you've installed ``django-locking`` and have one or a few models that have ``LockableModel`` as a base class, you're set to go.
+Once you've installed ``django-locking`` and have one or a few models that have ``locking.models.LockableModel`` as a base class, and ModelAdmins that have ``locking.admin.LockableAdmin`` as a base class, you're good to go.
 
 .. image:: screenshots/locked-editscreen.png
 
-Below are a few guidelines for advanced usage.
+``django-locking`` enables locking in the admin by disabling all input fields. That way, any user can still read locked content, they just can't edit it.
+
+* A lock icon indicates locked content in the list edit screen
+* A red warning message indicates locked content on the edit page itself.
+* Five minutes before the lock times out, users will receive a javascript alert with a message warning them to save their content before they lose their edit lock.
+
+Advanced usage
+--------------
 
 * By default, ``django-locking`` uses **soft locks**. Read more about different methods of locking over at :doc:`design`.
-* When integrating with your own applications, you should take care when overriding certain methods, specifically ``LockableModel.save`` and ``LockableAdmin.changelist_view``. Make sure to call ``super`` if you want to maintain the default behavior of ``django-locking``.
+* When integrating with your own applications, you should take care when overriding certain methods, specifically ``LockableModel.save``, ``LockableAdmin.changelist_view`` and ``LockableAdmin.save_model``, as well as any of the methods that come with ``django-locking`` itself (see :doc:`api`). Make sure to call ``super`` if you want to maintain the default behavior of ``django-locking``.
 
 Learn more about best practices when using super here__. Chiefly, do not assume that subclasses won't need or superclasses won't pass any extra arguments. You will want your overrides to look like this: 
 

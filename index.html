@@ -30,6 +30,9 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
           <a href="api.html" title="The public API"
              accesskey="N">next</a> |</li>
         <li><a href="#">django-locking v0.2 documentation</a> &raquo;</li> 
@@ -47,7 +50,8 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="api.html">The public API</a><ul>
 <li class="toctree-l2"><a class="reference external" href="api.html#some-examples">Some examples</a></li>
-<li class="toctree-l2"><a class="reference external" href="api.html#methods-and-attributes">Methods and attributes</a></li>
+<li class="toctree-l2"><a class="reference external" href="api.html#module-locking.models">Methods and attributes</a></li>
+<li class="toctree-l2"><a class="reference external" href="api.html#nomenclature">Nomenclature</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference external" href="changelog.html">Changelog</a><ul>
@@ -62,7 +66,10 @@
 </li>
 <li class="toctree-l1"><a class="reference external" href="design.html">Design considerations</a><ul>
 <li class="toctree-l2"><a class="reference external" href="design.html#pessimistic-versus-optimistic-locking">Pessimistic versus optimistic locking</a></li>
-<li class="toctree-l2"><a class="reference external" href="design.html#a-short-overview-of-different-locking-implementations">A short overview of different locking implementations</a></li>
+<li class="toctree-l2"><a class="reference external" href="design.html#a-short-overview-of-different-locking-implementations">A short overview of different locking implementations</a><ul>
+<li class="toctree-l3"><a class="reference external" href="design.html#implementation-in-django-locking">Implementation in <tt class="docutils literal"><span class="pre">django-locking</span></tt></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference external" href="developers.html">Developers&#8217; documentation</a><ul>
@@ -115,23 +122,33 @@
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
-<li>Downloading and installing the app and its dependencies (automatically using easy_install / pip)</li>
-<li>adding the app to settings.py, and optionally specifying a LOCK_TIMEOUT</li>
-<li>configure <tt class="docutils literal"><span class="pre">django-staticfiles</span> <span class="pre">file</span> <span class="pre">serving</span></tt> for development (see the documentation <a class="reference external" href="http://bitbucket.org/jezdez/django-staticfiles/src#serving-static-files-during-development">here</a>)</li>
-<li>Adding locking to your models, updating the database models</li>
-<li>Activating locking in the admin.</li>
-<li>Using the locking API</li>
-<li>Using django-locking in production (django-staticfiles)</li>
+<li>This app will not be available on PyPI until version 0.3 at the earliest. In the meanwhile, just download the package and install it using <tt class="docutils literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></tt>.</li>
+<li>Add <tt class="docutils literal"><span class="pre">locking</span></tt> to your <tt class="docutils literal"><span class="pre">INSTALLED_APPS</span></tt> in the <tt class="docutils literal"><span class="pre">settings.py</span></tt> to your project.</li>
+<li>You may optionally specify a <tt class="docutils literal"><span class="pre">LOCK_TIMEOUT</span></tt> in <tt class="docutils literal"><span class="pre">settings.py</span></tt>, which should be in seconds. It defaults to half an hour (1800 seconds).</li>
+<li>Configure your development environment for file serving using <tt class="docutils literal"><span class="pre">django-staticfiles</span></tt>. See the documentation <a class="reference external" href="http://bitbucket.org/jezdez/django-staticfiles/src#serving-static-files-during-development">here</a>.</li>
+<li>Add <tt class="docutils literal"><span class="pre">(r'^ajax/admin/',</span> <span class="pre">include('locking.urls'))</span></tt> to your urlconf (<tt class="docutils literal"><span class="pre">urls.py</span></tt>). You may use any base url, <tt class="docutils literal"><span class="pre">ajax/admin/</span></tt> is just an example.</li>
+<li>Specify <tt class="docutils literal"><span class="pre">locking.models.LockableModel</span></tt> as a base class for any model that requires locking. If you&#8217;re doing this on an existing model, be aware that <tt class="docutils literal"><span class="pre">syncdb</span></tt> won&#8217;t work &#8211; you&#8217;ll either need South or do the migration manually. (<tt class="docutils literal"><span class="pre">syncdb</span></tt> doesn&#8217;t add new fields to any existing table.)</li>
+<li>To enable locking in the admin interface, specify <tt class="docutils literal"><span class="pre">locking.admin.LockableAdmin</span></tt> as the base class for your own ModelAdmins.</li>
 </ol>
+<p>Want to know more about the public API? <a class="reference external" href="api.html"><em>The public API</em></a></p>
+<p>Something not working? Contact <a class="reference external" href="http://github.com/stdbrouw">the author</a> or <a class="reference external" href="http://github.com/stdbrouw/django-locking/issues">open an issue on GitHub</a>.</p>
 </div>
 <div class="section" id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
-<p>Once you&#8217;ve installed <tt class="docutils literal"><span class="pre">django-locking</span></tt> and have one or a few models that have <tt class="docutils literal"><span class="pre">LockableModel</span></tt> as a base class, you&#8217;re set to go.</p>
+<p>Once you&#8217;ve installed <tt class="docutils literal"><span class="pre">django-locking</span></tt> and have one or a few models that have <tt class="docutils literal"><span class="pre">locking.models.LockableModel</span></tt> as a base class, and ModelAdmins that have <tt class="docutils literal"><span class="pre">locking.admin.LockableAdmin</span></tt> as a base class, you&#8217;re good to go.</p>
 <img alt="_images/locked-editscreen.png" src="_images/locked-editscreen.png" />
-<p>Below are a few guidelines for advanced usage.</p>
+<p><tt class="docutils literal"><span class="pre">django-locking</span></tt> enables locking in the admin by disabling all input fields. That way, any user can still read locked content, they just can&#8217;t edit it.</p>
+<ul class="simple">
+<li>A lock icon indicates locked content in the list edit screen</li>
+<li>A red warning message indicates locked content on the edit page itself.</li>
+<li>Five minutes before the lock times out, users will receive a javascript alert with a message warning them to save their content before they lose their edit lock.</li>
+</ul>
+</div>
+<div class="section" id="advanced-usage">
+<h2>Advanced usage<a class="headerlink" href="#advanced-usage" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>By default, <tt class="docutils literal"><span class="pre">django-locking</span></tt> uses <strong>soft locks</strong>. Read more about different methods of locking over at <a class="reference external" href="design.html"><em>Design considerations</em></a>.</li>
-<li>When integrating with your own applications, you should take care when overriding certain methods, specifically <tt class="docutils literal"><span class="pre">LockableModel.save</span></tt> and <tt class="docutils literal"><span class="pre">LockableAdmin.changelist_view</span></tt>. Make sure to call <tt class="docutils literal"><span class="pre">super</span></tt> if you want to maintain the default behavior of <tt class="docutils literal"><span class="pre">django-locking</span></tt>.</li>
+<li>When integrating with your own applications, you should take care when overriding certain methods, specifically <tt class="docutils literal"><span class="pre">LockableModel.save</span></tt>, <tt class="docutils literal"><span class="pre">LockableAdmin.changelist_view</span></tt> and <tt class="docutils literal"><span class="pre">LockableAdmin.save_model</span></tt>, as well as any of the methods that come with <tt class="docutils literal"><span class="pre">django-locking</span></tt> itself (see <a class="reference external" href="api.html"><em>The public API</em></a>). Make sure to call <tt class="docutils literal"><span class="pre">super</span></tt> if you want to maintain the default behavior of <tt class="docutils literal"><span class="pre">django-locking</span></tt>.</li>
 </ul>
 <p>Learn more about best practices when using super <a class="reference external" href="http://fuhm.net/super-harmful/">here</a>. Chiefly, do not assume that subclasses won&#8217;t need or superclasses won&#8217;t pass any extra arguments. You will want your overrides to look like this:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="o">*</span><span class="n">vargs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -158,6 +175,7 @@
 <li><a class="reference external" href="#features">Features</a></li>
 <li><a class="reference external" href="#installation">Installation</a></li>
 <li><a class="reference external" href="#usage">Usage</a></li>
+<li><a class="reference external" href="#advanced-usage">Advanced usage</a></li>
 </ul>
 </li>
 </ul>
@@ -193,6 +211,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="api.html" title="The public API"
              >next</a> |</li>

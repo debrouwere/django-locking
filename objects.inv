@@ -1,3 +1,18 @@
 # Sphinx inventory version 1
 # Project: django-locking
 # Version: 0.2
+locking.models mod api.html
+locking.models.LockableModel.save method api.html
+locking.models.LockableModel.is_locked_by method api.html
+locking.models.LockableModel.is_locked attribute api.html
+locking.models.LockableModel.lock_applies_to method api.html
+locking.models.LockableModel.lock_seconds_remaining attribute api.html
+locking.models.LockableModel.lock_type attribute api.html
+locking.models.ObjectLockedError exception api.html
+locking.models.LockableModel.locked_at attribute api.html
+locking.models.LockableModel.unlock_for method api.html
+locking.models.LockableModel.Meta class api.html
+locking.models.LockableModel.lock_for method api.html
+locking.models.LockableModel.unlock method api.html
+locking.models.LockableModel.locked_by attribute api.html
+locking.models.LockableModel class api.html

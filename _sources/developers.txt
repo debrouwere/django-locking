@@ -9,7 +9,7 @@ The public API
 Running the test suite
 ----------------------
 
-If you want to run the test suite to ``django-locking``, just, eh, wait 'till I've had a chance to write this part of the documentation.
+Running the test suite to ``django-locking`` is as easy as adding ``locking`` to your ``INSTALLED_APPS`` in ``settings.py``, and running ``python manage.py test locking``.
 
 Building the documentation
 --------------------------

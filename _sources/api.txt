@@ -40,14 +40,17 @@ And we can unlock again. Although it's possible to force an unlock, it's better 
     True
     >>> s.save()
 
-.. __: http://github.com/stdbrouw
-
 Methods and attributes
 ----------------------
 
-... are not quite documented yet. Expect this soon, and `badger me`__ about it if it's taking too long.
+Most functionality and domain logic of ``django-locking`` resides in the ``LockableModel``, with the views providing little more than an interface to the web.
 
-.. .. automodule:: locking.models
+.. automodule:: locking.models
    :show-inheritance:
    :members:
    :undoc-members:
+
+Nomenclature
+------------
+
+``django-locking`` tries to be consistent in its terminology, even if it doesn't always succeed. An object can be **locked** and **unlocked**, in which case we've **disengaged** a lock. A lock can **apply** to a certain user, or not apply because it was **initiated** by that same user. A lock will **expire** once it has been in place longer than a predefined **timeout**.

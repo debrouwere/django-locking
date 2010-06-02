@@ -109,15 +109,15 @@
 <li>other users can still view locked content, they just can&#8217;t edit the stuff somebody else is working on</li>
 <li>configurable: you can define the amount of minutes before the app auto-expires content locks</li>
 <li>users receive an alert when a lock is about to expire</li>
+</ul>
+<p>Some other things you might like to know about:</p>
+<ul class="simple">
+<li>a choice between soft locks (only enforced at the front-end level) and hard locks (enforced at the ORM level &#8211; raising an error when trying to save a locked object). (See <a class="reference external" href="design.html"><em>Design considerations</em></a>)</li>
 <li>A public API for coders who want to integrate their apps with <tt class="docutils literal"><span class="pre">django-locking</span></tt>. See <a class="reference external" href="developers.html"><em>Developers&#8217; documentation</em></a> and <a class="reference external" href="api.html"><em>The public API</em></a>.</li>
 <li>well-documented</li>
+<li>verbose (i.e. a lot of logging to <tt class="docutils literal"><span class="pre">sys.stdout</span></tt>), so you can see what&#8217;s going on behind the screen</li>
 </ul>
-<p>Soon:</p>
-<ul class="simple">
-<li>currently only supports soft locks (javascript), but soon it&#8217;ll do hard locks as well (see <a class="reference external" href="design.html"><em>Design considerations</em></a>)</li>
-<li>manual lock overrides for admins</li>
-<li>some other things (see <a class="reference external" href="ponies.html"><em>Roadmap</em></a>)</li>
-</ul>
+<p>Test coverage is still subpar but getting better &#8211; this currently has priority. For other stuff on the roadmap, see <a class="reference external" href="ponies.html"><em>Roadmap</em></a>.</p>
 </div>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>

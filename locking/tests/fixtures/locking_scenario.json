@@ -3,9 +3,16 @@
         "pk": 1, 
         "model": "tests.story", 
         "fields": {
-            "content": "This is a little story.", 
+            "content": "This is a little lockable story.", 
             "_locked_at": "2010-05-28 11:10:05", 
             "_locked_by": 2
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "tests.unlockable", 
+        "fields": {
+            "content": "This is an object that doesn't have LockableModel as a base class."
         }
     }, 
     {

@@ -14,7 +14,7 @@ Running the test suite to ``django-locking`` is as easy as adding ``locking`` to
 Building the documentation
 --------------------------
 
-Building the documentation can be done by simply cd'ing to the `/docs` directory and executing `make build html`. The documentation for Sphinx (the tool used to build the documentation) can be found here__, and a reStructured Text primer, which explains the markup language can be found here__.
+Building the documentation can be done by simply cd'ing to the ``/docs`` directory and executing ``make build html``. The documentation for Sphinx (the tool used to build the documentation) can be found here__, and a reStructured Text primer, which explains the markup language can be found here__.
 
 .. __: http://sphinx.pocoo.org/index.html
 

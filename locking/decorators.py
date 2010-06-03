@@ -22,6 +22,8 @@ def is_lockable(fn):
             cls = ContentType.objects.get(app_label=app, model=model).model_class()
             if issubclass(cls, LockableModel):
                 lockable = True
+            else:
+                lockable = False
         except ContentType.DoesNotExist:
             lockable = False
             

@@ -2,6 +2,13 @@
 Changelog
 =========
 
+0.3 (pending)
+-------------
+
+* hard locks and soft locks (see :doc:`design`)
+* improved the test coverage with web client tests
+* more docstrings and more documentation in general
+
 0.2
 ---
 

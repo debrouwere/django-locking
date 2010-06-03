@@ -1,6 +1,22 @@
 Concurrency control with django-locking
 =======================================
 
+``django-locking`` makes sure no two users can edit the same content at the same time, preventing annoying overwrites and lost time. Find the repository and download the code at http://github.com/stdbrouw/django-locking
+
+The low-down
+------------
+
+Django has seen great adoption in the content management sphere, especially among the newspaper crowd. One of the trickier things to get right, is to make sure that nobody steps on each others toes while editing and modifying existing content. Newspaper editors might not always be aware of what other editors are up to, and this goes double for distributed teams. When different people work on the same content, the one who saves last will win the day, while the other edits are overwritten.
+
+``django-locking`` **provides a system that makes concurrent editing impossible, and informs users of what other users are working on and for how long that content will remain locked. Users can still read locked content, but cannot modify or save it.**
+
+.. image:: screenshots/locked-list.png
+
+``django-locking`` **interfaces with the django admin** application, but **also provides an API** that you can use in applications of your own.
+
+Table of contents
+-----------------
+
 You should take a look at this page first, as it'll answer most of your questions, but here's the TOC to the entire documentation: 
 
 .. toctree::
@@ -8,14 +24,8 @@ You should take a look at this page first, as it'll answer most of your question
    
    *
 
-Avoiding concurrent edits
--------------------------
-
-Django has seen great adoption in the content management sphere, especially among the newspaper crowd. One of the trickier things to get right, is to make sure that nobody steps on each others toes while editing and modifying existing content. Newspaper editors might not always be aware of what other editors are up to, and this goes double for distributed teams. When different people work on the same content, the one who saves last will win the day, while the other edits are overwritten. ``django-locking`` **provides a system that makes concurrent editing impossible, and informs users of what other users are working on and for how long that content will remain locked. Users can still read locked content, but cannot modify or save it.**
-
-.. image:: screenshots/locked-list.png
-
-``django-locking`` **interfaces with the django admin** application, but **also provides an API** that you can use in applications of your own.
+Notes
+-----
 
 Looking for something else?
 '''''''''''''''''''''''''''
@@ -26,8 +36,8 @@ Do note that, in the context of this application, 'locking' means preventing con
 
 .. __: http://github.com/f4nt/django-granular-permissions
 
-Beta-quality
-''''''''''''
+Beta!
+'''''
 
 While ``django-locking`` has seen a little production use and has a fair amount of unit-tests, please be advised that at this moment it is still beta-quality software. However, I'm quite responsive when it comes to the `GitHub issue tracker`__, and you should also feel free to contact me more directly, either `through GitHub or by e-mailing`__.
 
@@ -50,11 +60,10 @@ Some other things you might like to know about:
 * a choice between soft locks (only enforced at the front-end level) and hard locks (enforced at the ORM level -- raising an error when trying to save a locked object). (See :doc:`design`)
 * A public API for coders who want to integrate their apps with ``django-locking``. See :doc:`developers` and :doc:`api`.
 * well-documented
+* well-tested
 * verbose (i.e. a lot of logging to ``sys.stdout``), so you can see what's going on behind the screen
 
-Test coverage is still subpar but getting better -- this currently has priority. For other stuff on the roadmap, see :doc:`ponies`.
-
-.. django-locking is carefully unit-tested (X% code coverage with over Y tests that span more than Z lines of code). Developers expanding on the code or debugging will appreciate that most of its functionality is log-enabled, so you can see what's going on behind the screen.
+For other stuff on the roadmap, see :doc:`ponies`.
 
 Installation
 ------------

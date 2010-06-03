@@ -46,6 +46,16 @@
             
   <div class="section" id="concurrency-control-with-django-locking">
 <h1>Concurrency control with django-locking<a class="headerlink" href="#concurrency-control-with-django-locking" title="Permalink to this headline">¶</a></h1>
+<p><tt class="docutils literal"><span class="pre">django-locking</span></tt> makes sure no two users can edit the same content at the same time, preventing annoying overwrites and lost time. Find the repository and download the code at <a class="reference external" href="http://github.com/stdbrouw/django-locking">http://github.com/stdbrouw/django-locking</a></p>
+<div class="section" id="the-low-down">
+<h2>The low-down<a class="headerlink" href="#the-low-down" title="Permalink to this headline">¶</a></h2>
+<p>Django has seen great adoption in the content management sphere, especially among the newspaper crowd. One of the trickier things to get right, is to make sure that nobody steps on each others toes while editing and modifying existing content. Newspaper editors might not always be aware of what other editors are up to, and this goes double for distributed teams. When different people work on the same content, the one who saves last will win the day, while the other edits are overwritten.</p>
+<p><tt class="docutils literal"><span class="pre">django-locking</span></tt> <strong>provides a system that makes concurrent editing impossible, and informs users of what other users are working on and for how long that content will remain locked. Users can still read locked content, but cannot modify or save it.</strong></p>
+<img alt="_images/locked-list.png" src="_images/locked-list.png" />
+<p><tt class="docutils literal"><span class="pre">django-locking</span></tt> <strong>interfaces with the django admin</strong> application, but <strong>also provides an API</strong> that you can use in applications of your own.</p>
+</div>
+<div class="section" id="table-of-contents">
+<h2>Table of contents<a class="headerlink" href="#table-of-contents" title="Permalink to this headline">¶</a></h2>
 <p>You should take a look at this page first, as it&#8217;ll answer most of your questions, but here&#8217;s the TOC to the entire documentation:</p>
 <ul>
 <li class="toctree-l1"><a class="reference external" href="api.html">The public API</a><ul>
@@ -55,6 +65,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference external" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference external" href="changelog.html#pending">0.3 (pending)</a></li>
 <li class="toctree-l2"><a class="reference external" href="changelog.html#id1">0.2</a></li>
 <li class="toctree-l2"><a class="reference external" href="changelog.html#id2">0.1</a></li>
 </ul>
@@ -86,17 +97,15 @@
 </ul>
 </li>
 </ul>
-<div class="section" id="avoiding-concurrent-edits">
-<h2>Avoiding concurrent edits<a class="headerlink" href="#avoiding-concurrent-edits" title="Permalink to this headline">¶</a></h2>
-<p>Django has seen great adoption in the content management sphere, especially among the newspaper crowd. One of the trickier things to get right, is to make sure that nobody steps on each others toes while editing and modifying existing content. Newspaper editors might not always be aware of what other editors are up to, and this goes double for distributed teams. When different people work on the same content, the one who saves last will win the day, while the other edits are overwritten. <tt class="docutils literal"><span class="pre">django-locking</span></tt> <strong>provides a system that makes concurrent editing impossible, and informs users of what other users are working on and for how long that content will remain locked. Users can still read locked content, but cannot modify or save it.</strong></p>
-<img alt="_images/locked-list.png" src="_images/locked-list.png" />
-<p><tt class="docutils literal"><span class="pre">django-locking</span></tt> <strong>interfaces with the django admin</strong> application, but <strong>also provides an API</strong> that you can use in applications of your own.</p>
+</div>
+<div class="section" id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="looking-for-something-else">
 <h3>Looking for something else?<a class="headerlink" href="#looking-for-something-else" title="Permalink to this headline">¶</a></h3>
 <p>Do note that, in the context of this application, &#8216;locking&#8217; means preventing concurrent editing. You might also know this by the term &#8216;mutex&#8217; or the more colloquial &#8216;checkouts&#8217;. If you ended up here while looking for an application that provides permission-based access to certain content, read up on <em>row-level permissions</em> and <em>granular permissions</em>. Also check out <a class="reference external" href="http://code.google.com/p/django-lock/">django-lock</a>, <a class="reference external" href="http://github.com/f4nt/django-granular-permissions">django-granular-permissions</a> and similar apps.</p>
 </div>
-<div class="section" id="beta-quality">
-<h3>Beta-quality<a class="headerlink" href="#beta-quality" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="beta">
+<h3>Beta!<a class="headerlink" href="#beta" title="Permalink to this headline">¶</a></h3>
 <p>While <tt class="docutils literal"><span class="pre">django-locking</span></tt> has seen a little production use and has a fair amount of unit-tests, please be advised that at this moment it is still beta-quality software. However, I&#8217;m quite responsive when it comes to the <a class="reference external" href="http://github.com/stdbrouw/django-locking/issues">GitHub issue tracker</a>, and you should also feel free to contact me more directly, either <a class="reference external" href="http://github.com/stdbrouw">through GitHub or by e-mailing</a>.</p>
 </div>
 </div>
@@ -115,9 +124,10 @@
 <li>a choice between soft locks (only enforced at the front-end level) and hard locks (enforced at the ORM level &#8211; raising an error when trying to save a locked object). (See <a class="reference external" href="design.html"><em>Design considerations</em></a>)</li>
 <li>A public API for coders who want to integrate their apps with <tt class="docutils literal"><span class="pre">django-locking</span></tt>. See <a class="reference external" href="developers.html"><em>Developers&#8217; documentation</em></a> and <a class="reference external" href="api.html"><em>The public API</em></a>.</li>
 <li>well-documented</li>
+<li>well-tested</li>
 <li>verbose (i.e. a lot of logging to <tt class="docutils literal"><span class="pre">sys.stdout</span></tt>), so you can see what&#8217;s going on behind the screen</li>
 </ul>
-<p>Test coverage is still subpar but getting better &#8211; this currently has priority. For other stuff on the roadmap, see <a class="reference external" href="ponies.html"><em>Roadmap</em></a>.</p>
+<p>For other stuff on the roadmap, see <a class="reference external" href="ponies.html"><em>Roadmap</em></a>.</p>
 </div>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
@@ -167,9 +177,13 @@
             <h3><a href="#">Table Of Contents</a></h3>
             <ul>
 <li><a class="reference external" href="#">Concurrency control with django-locking</a><ul>
-<li><a class="reference external" href="#avoiding-concurrent-edits">Avoiding concurrent edits</a><ul>
+<li><a class="reference external" href="#the-low-down">The low-down</a></li>
+<li><a class="reference external" href="#table-of-contents">Table of contents</a><ul>
+</ul>
+</li>
+<li><a class="reference external" href="#notes">Notes</a><ul>
 <li><a class="reference external" href="#looking-for-something-else">Looking for something else?</a></li>
-<li><a class="reference external" href="#beta-quality">Beta-quality</a></li>
+<li><a class="reference external" href="#beta">Beta!</a></li>
 </ul>
 </li>
 <li><a class="reference external" href="#features">Features</a></li>

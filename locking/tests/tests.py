@@ -108,6 +108,8 @@ users = [
 class BrowserTestCase(TestCase):
     fixtures = ['locking_scenario',]
     apps = ('locking.tests', 'django.contrib.auth', 'django.contrib.admin', )
+    # REFACTOR: 
+    # urls = 'locking.tests.urls'
 
     def setUp(self):
         # some objects we might use directly, instead of via the client

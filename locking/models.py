@@ -1,12 +1,15 @@
 # encoding: utf-8
 
 from datetime import datetime
+import logging
 
 from django.db import models
 from django.conf import settings
 from django.contrib.auth import models as auth
 
-from locking import LOCK_TIMEOUT, logging
+from locking import LOCK_TIMEOUT, LOCKING_LOGGER_NAME
+
+logger = logging.getLogger(LOCKING_LOGGER_NAME)
 
 class ObjectLockedError(IOError):
     pass
@@ -92,7 +95,7 @@ class LockableModel(models.Model):
         
         Don't use hard locks unless you really need them. See :doc:`design`.
         """
-        logging.info("Attempting to initiate a lock for user `%s`" % user)
+        logger.info("Attempting to initiate a lock for user `%s`" % user)
 
         if not isinstance(user, auth.User):
             raise ValueError("You should pass a valid auth.User to lock_for.")
@@ -105,7 +108,7 @@ class LockableModel(models.Model):
             self._locked_by = user
             self._hard_lock = self.__init_hard_lock = hard_lock
             date = self.locked_at.strftime("%H:%M:%S")
-            logging.info("Initiated a %s lock for `%s` at %s" % (self.lock_type, self.locked_by, self.locked_at))     
+            logger.info("Initiated a %s lock for `%s` at %s" % (self.lock_type, self.locked_by, self.locked_at))     
 
     def unlock(self):
         """
@@ -114,7 +117,7 @@ class LockableModel(models.Model):
         locks themselves. Otherwise, use ``unlock_for``.
         """
         self._locked_at = self._locked_by = None
-        logging.info("Disengaged lock on `%s`" % self)
+        logger.info("Disengaged lock on `%s`" % self)
     
     def unlock_for(self, user):
         """
@@ -125,7 +128,7 @@ class LockableModel(models.Model):
         Will raise a ObjectLockedError exception when the current user isn't authorized to
         unlock the object.
         """
-        logging.info("Attempting to open up a lock on `%s` by user `%s`" % (self, user))
+        logger.info("Attempting to open up a lock on `%s` by user `%s`" % (self, user))
     
         # refactor: should raise exceptions instead
         if self.is_locked_by(user):
@@ -139,13 +142,13 @@ class LockableModel(models.Model):
         ``lock_applies_to`` is used to ascertain whether a user is allowed
         to edit a locked object.
         """
-        logging.info("Checking if the lock on `%s` applies to user `%s`" % (self, user))
+        logger.info("Checking if the lock on `%s` applies to user `%s`" % (self, user))
         # a lock does not apply to the person who initiated the lock
         if self.is_locked and self.locked_by != user:
-            logging.info("Lock applies.")
+            logger.info("Lock applies.")
             return True
         else:
-            logging.info("Lock does not apply.")
+            logger.info("Lock does not apply.")
             return False
     
     def is_locked_by(self, user):

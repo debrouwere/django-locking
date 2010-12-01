@@ -12,9 +12,6 @@
 # serve to show the default.
 
 import sys, os
-# explicitly add this package to the python path so that sphinx.ext.autodoc picks it up
-root = os.path.realpath(os.path.join(os.path.abspath(os.path.dirname(__file__)), '..'))
-sys.path.append(root)
 os.environ['DJANGO_SETTINGS_MODULE'] = 'django.conf.global_settings'
 
 # If extensions (or modules to document with autodoc) are in another directory,

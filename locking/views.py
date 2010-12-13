@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 
 from locking.decorators import user_may_change_model, is_lockable, log
-from locking import utils, LOCK_TIMEOUT, logging, models
+from locking import utils, LOCK_TIMEOUT, logger, models
 
 """
 These views are called from javascript to open and close assets (objects), in order

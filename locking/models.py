@@ -1,15 +1,12 @@
 # encoding: utf-8
 
 from datetime import datetime
-import logging
 
 from django.db import models
 from django.conf import settings
 from django.contrib.auth import models as auth
 
-from locking import LOCK_TIMEOUT, LOCKING_LOGGER_NAME
-
-logger = logging.getLogger(LOCKING_LOGGER_NAME)
+from locking import LOCK_TIMEOUT, logger
 
 class ObjectLockedError(IOError):
     pass

@@ -50,7 +50,6 @@ class LockableAdmin(admin.ModelAdmin):
         obj.save()
         
     def lock(self, obj):
-        print obj.is_locked
         if obj.is_locked:
             seconds_remaining = obj.lock_seconds_remaining
             minutes_remaining = seconds_remaining/60

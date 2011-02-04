@@ -7,11 +7,16 @@ from django.conf import settings
 from django.contrib.auth import models as auth
 
 from locking import LOCK_TIMEOUT, logger
+import managers
 
 class ObjectLockedError(IOError):
     pass
 
 class LockableModel(models.Model):
+    objects = managers.Manager()
+    locked = managers.LockedManager()
+    unlocked = managers.UnlockedManager()
+
     def __init__(self, *vargs, **kwargs):
         super(LockableModel, self).__init__(*vargs, **kwargs)
         self._state.locking = False
@@ -62,7 +67,6 @@ class LockableModel(models.Model):
         Works by calculating if the last lock (self.locked_at) has timed out or not.
         """
         if isinstance(self.locked_at, datetime):
-            # artikels worden een half uur gesloten
             if (datetime.today() - self.locked_at).seconds < LOCK_TIMEOUT:
                 return True
             else:

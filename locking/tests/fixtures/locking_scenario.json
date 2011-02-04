@@ -9,6 +9,15 @@
         }
     }, 
     {
+        "pk": 2, 
+        "model": "tests.story", 
+        "fields": {
+            "content": "This is another article ready for locking and unlocking.", 
+            "_locked_at": null, 
+            "_locked_by": null
+        }
+    }, 
+    {
         "pk": 1, 
         "model": "tests.unlockable", 
         "fields": {

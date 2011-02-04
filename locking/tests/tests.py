@@ -13,7 +13,7 @@ class AppTestCase(TestCase):
     fixtures = ['locking_scenario',]
 
     def setUp(self):
-        self.story = testmodels.Story.objects.all()[0]
+        self.alt_story, self.story = testmodels.Story.objects.all()
         users = User.objects.all()
         self.user, self.alt_user = users
     
@@ -120,6 +120,33 @@ class AppTestCase(TestCase):
         self.assertEquals(self.story._state.locking, True)        
         self.story.save()
         self.assertEquals(self.story._state.locking, False)  
+
+    def test_unlocked_manager(self):
+        self.story.lock_for(self.user)
+        self.story.save()
+        self.assertEquals(testmodels.Story.objects.count(), 2)
+        self.assertEquals(testmodels.Story.unlocked.count(), 1)
+        self.assertEquals(testmodels.Story.unlocked.get(pk=self.alt_story.pk).pk, 1)
+        self.assertRaises(testmodels.Story.DoesNotExist, testmodels.Story.unlocked.get, pk=self.story.pk)
+        self.assertNotEquals(testmodels.Story.unlocked.all()[0].pk, self.story.pk)
+
+    def test_locked_manager(self):
+        self.story.lock_for(self.user)
+        self.story.save()
+        self.assertEquals(testmodels.Story.objects.count(), 2)
+        self.assertEquals(testmodels.Story.locked.count(), 1)
+        self.assertEquals(testmodels.Story.locked.get(pk=self.story.pk).pk, 2)
+        self.assertRaises(testmodels.Story.DoesNotExist, testmodels.Story.locked.get, pk=self.alt_story.pk)
+        self.assertEquals(testmodels.Story.locked.all()[0].pk, self.story.pk)
+
+    def test_managers(self):
+        self.story.lock_for(self.user)
+        self.story.save()
+        locked = testmodels.Story.locked.all()
+        unlocked = testmodels.Story.unlocked.all()
+        self.assertEquals(locked.count(), 1)
+        self.assertEquals(unlocked.count(), 1)
+        self.assertTrue(len(set(locked).intersection(set(unlocked))) == 0)
 
 users = [
     # Stan is a superuser

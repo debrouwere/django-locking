@@ -98,6 +98,29 @@ class AppTestCase(TestCase):
         self.assertTrue("story" in lockable_models["tests"])
         self.assertTrue("unlockable" not in lockable_models["tests"])
 
+    def test_locking_bit_when_locking(self):
+        # when we've locked something, we should set an administrative
+        # bit so other developers can know a save will do a lock or 
+        # unlock and respond to that information if they so wish.
+        self.story.content = "Blah"
+        self.assertEquals(self.story._state.locking, False)
+        self.story.lock_for(self.user)
+        self.assertEquals(self.story._state.locking, True)
+        self.story.save()
+        self.assertEquals(self.story._state.locking, False)        
+
+    def test_locking_bit_when_unlocking(self):
+        # when we've locked something, we should set an administrative
+        # bit so other developers can know a save will do a lock or 
+        # unlock and respond to that information if they so wish.
+        self.story.content = "Blah"
+        self.assertEquals(self.story._state.locking, False)
+        self.story.lock_for(self.user)
+        self.story.unlock_for(self.user)
+        self.assertEquals(self.story._state.locking, True)        
+        self.story.save()
+        self.assertEquals(self.story._state.locking, False)  
+
 users = [
     # Stan is a superuser
     {"username": "Stan", "password": "green pastures"},

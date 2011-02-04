@@ -2,12 +2,16 @@
 Changelog
 =========
 
-0.3 (pending)
+1.0 (pending)
 -------------
 
-* hard locks and soft locks (see :doc:`design`)
-* improved the test coverage with web client tests
+V hard locks and soft locks (see :doc:`design`)
+* improve the test coverage with web client tests
 * more docstrings and more documentation in general
+* i18n: Dutch translation
+* manual overrides by admins (in the UI)
+* enhance the warning dialog users see five minutes prior to expiry, to allow users to renew their lock
+* make it so that locks do not trigger the ``auto_now`` or ``auto_now_add`` behavior of DateFields and DateTimeFields
 
 0.2
 ---

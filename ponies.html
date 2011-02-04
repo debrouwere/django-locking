@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -5,21 +6,22 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Roadmap &mdash; django-locking v0.2 documentation</title>
+    <title>Roadmap &mdash; django-locking v0.3 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '#',
-        VERSION:     '0.2',
-        COLLAPSE_MODINDEX: false,
+        URL_ROOT:    '',
+        VERSION:     '0.3',
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="django-locking v0.2 documentation" href="index.html" />
+    <link rel="top" title="django-locking v0.3 documentation" href="index.html" />
     <link rel="prev" title="Developers’ documentation" href="developers.html" /> 
   </head>
   <body>
@@ -30,12 +32,12 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="modindex.html" title="Global Module Index"
-             accesskey="M">modules</a> |</li>
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="developers.html" title="Developers’ documentation"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">django-locking v0.2 documentation</a> &raquo;</li> 
+        <li><a href="index.html">django-locking v0.3 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -49,8 +51,7 @@
 <div class="section" id="things-that-are-planned">
 <h2>Things that are planned<a class="headerlink" href="#things-that-are-planned" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>hard locks (see <a class="reference external" href="design.html"><em>Design considerations</em></a>)</li>
-<li>manual overrides by admins</li>
+<li>manual overrides by admins (in the UI)</li>
 <li>enhance the warning dialog users see five minutes prior to expiry, to allow users to renew their lock</li>
 <li>make it so that locks do not trigger the <tt class="docutils literal"><span class="pre">auto_now</span></tt> or <tt class="docutils literal"><span class="pre">auto_now_add</span></tt> behavior of DateFields and DateTimeFields</li>
 </ul>
@@ -58,7 +59,8 @@
 <div class="section" id="someday-maybe">
 <h2>Someday/maybe<a class="headerlink" href="#someday-maybe" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>minimize dependence on javascript for soft locks, by using a middleware and Django&#8217;s 1.2 <tt class="docutils literal"><span class="pre">read_only_fields</span></tt>. <tt class="docutils literal"><span class="pre">django-locking</span></tt> won&#8217;t be degrade entirely gracefully, but we do want to make sure it doesn&#8217;t degrade quite so <em>ungracefully</em> as it does now.</li>
+<li>running the test suite through setup.py</li>
+<li>minimize dependence on javascript for soft locks, by using a middleware and Django&#8217;s 1.2 <tt class="docutils literal"><span class="pre">read_only_fields</span></tt>. <tt class="docutils literal"><span class="pre">django-locking</span></tt> won&#8217;t degrade entirely gracefully, but we do want to make sure it doesn&#8217;t degrade quite so <em>ungracefully</em> as it does now.</li>
 <li>give end-developers a choice whether they want the LockableModel fields on the model itself (cleaner) or added with a OneToOneField instead (less hassle migrating if you&#8217;re not using <a class="reference external" href="http://south.aeracode.org/">South</a>)</li>
 <li>userless locking (might be interesting if you want to lock stuff that a process is doing number crunching on, or something similar)</li>
 </ul>
@@ -71,36 +73,36 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-            <h3><a href="index.html">Table Of Contents</a></h3>
-            <ul>
-<li><a class="reference external" href="#">Roadmap</a><ul>
-<li><a class="reference external" href="#things-that-are-planned">Things that are planned</a></li>
-<li><a class="reference external" href="#someday-maybe">Someday/maybe</a></li>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Roadmap</a><ul>
+<li><a class="reference internal" href="#things-that-are-planned">Things that are planned</a></li>
+<li><a class="reference internal" href="#someday-maybe">Someday/maybe</a></li>
 </ul>
 </li>
 </ul>
 
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="developers.html"
-                                  title="previous chapter">Developers&#8217; documentation</a></p>
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="_sources/ponies.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="developers.html"
+                        title="previous chapter">Developers&#8217; documentation</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/ponies.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -112,17 +114,17 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="modindex.html" title="Global Module Index"
+          <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="developers.html" title="Developers’ documentation"
              >previous</a> |</li>
-        <li><a href="index.html">django-locking v0.2 documentation</a> &raquo;</li> 
+        <li><a href="index.html">django-locking v0.3 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2010, Stijn Debrouwere.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+        &copy; Copyright 2010, Stijn Debrouwere.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
     </div>
   </body>
 </html>

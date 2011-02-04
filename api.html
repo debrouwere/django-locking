@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -5,21 +6,22 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>The public API &mdash; django-locking v0.2 documentation</title>
+    <title>The public API &mdash; django-locking v0.3 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '#',
-        VERSION:     '0.2',
-        COLLAPSE_MODINDEX: false,
+        URL_ROOT:    '',
+        VERSION:     '0.3',
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="django-locking v0.2 documentation" href="index.html" />
+    <link rel="top" title="django-locking v0.3 documentation" href="index.html" />
     <link rel="next" title="Changelog" href="changelog.html" />
     <link rel="prev" title="Concurrency control with django-locking" href="index.html" /> 
   </head>
@@ -31,15 +33,15 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="modindex.html" title="Global Module Index"
-             accesskey="M">modules</a> |</li>
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="changelog.html" title="Changelog"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="index.html" title="Concurrency control with django-locking"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">django-locking v0.2 documentation</a> &raquo;</li> 
+        <li><a href="index.html">django-locking v0.3 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -64,35 +66,38 @@
 <span class="go">INFO:root:Attempting to initiate a lock for user `stdbrouw`</span>
 <span class="go">INFO:root:Initiated a lock for `stdbrouw` at 2010-06-01 09:33:46.540376</span>
 <span class="go"># We can access all kind of information about the lock</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">locked_at</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">story</span><span class="o">.</span><span class="n">locked_at</span>
 <span class="go">datetime.datetime(2010, 6, 1, 9, 38, 3, 101238)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">locked_by</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">story</span><span class="o">.</span><span class="n">locked_by</span>
 <span class="go">&lt;User: stdbrouw&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">is_locked</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">story</span><span class="o">.</span><span class="n">is_locked</span>
 <span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">lock_seconds_remaining</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">story</span><span class="o">.</span><span class="n">lock_seconds_remaining</span>
 <span class="go">1767</span>
 <span class="go"># Remember: a lock isn&#39;t actually active until we save it to the database!</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">story</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>And we can unlock again. Although it&#8217;s possible to force an unlock, it&#8217;s better to unlock specifically for the user that locked the content in the first place &#8211; that way django-locking can protest if the wrong user tries to unlock something.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">unlock_for</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">story</span><span class="o">.</span><span class="n">unlock_for</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
 <span class="go">INFO:root:Attempting to open up a lock on `Story object` by user `blub`</span>
 <span class="go">INFO:root:Attempting to initiate a lock for user `False`</span>
 <span class="go">INFO:root:Freed lock on `Story object`</span>
 <span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">story</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 </pre></div>
 </div>
+<p>Additionally, the LockableModel class defines three <a class="reference external" href="http://docs.djangoproject.com/en/dev/topics/db/managers/">managers</a>: <tt class="docutils literal"><span class="pre">objects</span></tt>, <tt class="docutils literal"><span class="pre">locked</span></tt> and <tt class="docutils literal"><span class="pre">unlocked</span></tt>, that unsurprisingly give you access to, respectively, all objects, locked objects and unlocked objects.</p>
 </div>
-<div class="section" id="module-locking.models">
-<h2>Methods and attributes<a class="headerlink" href="#module-locking.models" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="methods-and-attributes">
+<h2>Methods and attributes<a class="headerlink" href="#methods-and-attributes" title="Permalink to this headline">¶</a></h2>
 <p>Most functionality and domain logic of <tt class="docutils literal"><span class="pre">django-locking</span></tt> resides in the <tt class="docutils literal"><span class="pre">LockableModel</span></tt>, with the views providing little more than an interface to the web.</p>
-<dl class="class">
+<span class="target" id="module-locking.models"></span><dl class="class">
 <dt id="locking.models.LockableModel">
-<em class="property">class </em><tt class="descclassname">locking.models.</tt><tt class="descname">LockableModel</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#locking.models.LockableModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref docutils literal"><span class="pre">django.db.models.base.Model</span></tt></p>
+<em class="property">class </em><tt class="descclassname">locking.models.</tt><tt class="descname">LockableModel</tt><big>(</big><em>*vargs</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#locking.models.LockableModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></tt></p>
+<p>LockableModel comes with three managers: <tt class="docutils literal"><span class="pre">objects</span></tt>, <tt class="docutils literal"><span class="pre">locked</span></tt> and 
+<tt class="docutils literal"><span class="pre">unlocked</span></tt>. They do what you&#8217;d expect them to.</p>
 <dl class="class">
 <dt id="locking.models.LockableModel.Meta">
 <em class="property">class </em><tt class="descname">Meta</tt><a class="headerlink" href="#locking.models.LockableModel.Meta" title="Permalink to this definition">¶</a></dt>
@@ -101,23 +106,26 @@
 <dl class="attribute">
 <dt id="locking.models.LockableModel.is_locked">
 <tt class="descclassname">LockableModel.</tt><tt class="descname">is_locked</tt><a class="headerlink" href="#locking.models.LockableModel.is_locked" title="Permalink to this definition">¶</a></dt>
-<dd>A read-only property that returns True or False.
-Works by calculating if the last lock (self.locked_at) has timed out or not.</dd></dl>
+<dd><p>A read-only property that returns True or False.
+Works by calculating if the last lock (self.locked_at) has timed out or not.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="locking.models.LockableModel.is_locked_by">
 <tt class="descclassname">LockableModel.</tt><tt class="descname">is_locked_by</tt><big>(</big><em>user</em><big>)</big><a class="headerlink" href="#locking.models.LockableModel.is_locked_by" title="Permalink to this definition">¶</a></dt>
-<dd>Returns True or False. Can be used to test whether this object is locked by
+<dd><p>Returns True or False. Can be used to test whether this object is locked by
 a certain user. The <tt class="docutils literal"><span class="pre">lock_applies_to</span></tt> method and the <tt class="docutils literal"><span class="pre">is_locked</span></tt> and 
 <tt class="docutils literal"><span class="pre">locked_by</span></tt> attributes are probably more useful for most intents and
-purposes.</dd></dl>
+purposes.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="locking.models.LockableModel.lock_applies_to">
 <tt class="descclassname">LockableModel.</tt><tt class="descname">lock_applies_to</tt><big>(</big><em>user</em><big>)</big><a class="headerlink" href="#locking.models.LockableModel.lock_applies_to" title="Permalink to this definition">¶</a></dt>
-<dd>A lock does not apply to the user who initiated the lock. Thus, 
+<dd><p>A lock does not apply to the user who initiated the lock. Thus, 
 <tt class="docutils literal"><span class="pre">lock_applies_to</span></tt> is used to ascertain whether a user is allowed
-to edit a locked object.</dd></dl>
+to edit a locked object.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="locking.models.LockableModel.lock_for">
@@ -129,7 +137,7 @@ an object they haven&#8217;t locked themselves.</p>
 <p>When using soft locks (the default), any process can still use the save method
 on this object. If you set <tt class="docutils literal"><span class="pre">hard_lock=True</span></tt>, trying to save an object
 without first unlocking will raise an <tt class="docutils literal"><span class="pre">ObjectLockedError</span></tt>.</p>
-<p>Don&#8217;t use hard locks unless you really need them. See <a class="reference external" href="design.html"><em>Design considerations</em></a>.</p>
+<p>Don&#8217;t use hard locks unless you really need them. See <a class="reference internal" href="design.html"><em>Design considerations</em></a>.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -146,19 +154,22 @@ lock using the <tt class="docutils literal"><span class="pre">lock_for</span></t
 <dl class="attribute">
 <dt id="locking.models.LockableModel.lock_type">
 <tt class="descclassname">LockableModel.</tt><tt class="descname">lock_type</tt><a class="headerlink" href="#locking.models.LockableModel.lock_type" title="Permalink to this definition">¶</a></dt>
-<dd>Returns the type of lock that is currently active. Either
-<tt class="docutils literal"><span class="pre">hard</span></tt>, <tt class="docutils literal"><span class="pre">soft</span></tt> or <tt class="xref docutils literal"><span class="pre">None</span></tt>. Read-only.</dd></dl>
+<dd><p>Returns the type of lock that is currently active. Either
+<tt class="docutils literal"><span class="pre">hard</span></tt>, <tt class="docutils literal"><span class="pre">soft</span></tt> or <tt class="xref docutils literal"><span class="pre">None</span></tt>. Read-only.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="locking.models.LockableModel.locked_at">
 <tt class="descclassname">LockableModel.</tt><tt class="descname">locked_at</tt><a class="headerlink" href="#locking.models.LockableModel.locked_at" title="Permalink to this definition">¶</a></dt>
-<dd>A simple <tt class="docutils literal"><span class="pre">DateTimeField</span></tt> that is the heart of the locking mechanism. Read-only.</dd></dl>
+<dd><p>A simple <tt class="docutils literal"><span class="pre">DateTimeField</span></tt> that is the heart of the locking mechanism. Read-only.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="locking.models.LockableModel.locked_by">
 <tt class="descclassname">LockableModel.</tt><tt class="descname">locked_by</tt><a class="headerlink" href="#locking.models.LockableModel.locked_by" title="Permalink to this definition">¶</a></dt>
-<dd><tt class="docutils literal"><span class="pre">locked_by</span></tt> is a foreign key to <tt class="docutils literal"><span class="pre">auth.User</span></tt>. The <tt class="docutils literal"><span class="pre">related_name</span></tt> on the 
-User object is <tt class="docutils literal"><span class="pre">working_on_%(class)s</span></tt>. Read-only.</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">locked_by</span></tt> is a foreign key to <tt class="docutils literal"><span class="pre">auth.User</span></tt>. The <tt class="docutils literal"><span class="pre">related_name</span></tt> on the 
+User object is <tt class="docutils literal"><span class="pre">working_on_%(class)s</span></tt>. Read-only.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="locking.models.LockableModel.save">
@@ -168,9 +179,10 @@ User object is <tt class="docutils literal"><span class="pre">working_on_%(class
 <dl class="method">
 <dt id="locking.models.LockableModel.unlock">
 <tt class="descclassname">LockableModel.</tt><tt class="descname">unlock</tt><big>(</big><big>)</big><a class="headerlink" href="#locking.models.LockableModel.unlock" title="Permalink to this definition">¶</a></dt>
-<dd>This method serves solely to allow the application itself or admin users
+<dd><p>This method serves solely to allow the application itself or admin users
 to do manual lock overrides, even if they haven&#8217;t initiated these
-locks themselves. Otherwise, use <tt class="docutils literal"><span class="pre">unlock_for</span></tt>.</dd></dl>
+locks themselves. Otherwise, use <tt class="docutils literal"><span class="pre">unlock_for</span></tt>.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="locking.models.LockableModel.unlock_for">
@@ -187,7 +199,8 @@ unlock the object.</p>
 <dl class="exception">
 <dt id="locking.models.ObjectLockedError">
 <em class="property">exception </em><tt class="descclassname">locking.models.</tt><tt class="descname">ObjectLockedError</tt><a class="headerlink" href="#locking.models.ObjectLockedError" title="Permalink to this definition">¶</a></dt>
-<dd>Bases: <tt class="xref docutils literal"><span class="pre">exceptions.IOError</span></tt></dd></dl>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.IOError</span></tt></p>
+</dd></dl>
 
 </div>
 <div class="section" id="nomenclature">
@@ -202,40 +215,40 @@ unlock the object.</p>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-            <h3><a href="index.html">Table Of Contents</a></h3>
-            <ul>
-<li><a class="reference external" href="#">The public API</a><ul>
-<li><a class="reference external" href="#some-examples">Some examples</a></li>
-<li><a class="reference external" href="#module-locking.models">Methods and attributes</a></li>
-<li><a class="reference external" href="#nomenclature">Nomenclature</a></li>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">The public API</a><ul>
+<li><a class="reference internal" href="#some-examples">Some examples</a></li>
+<li><a class="reference internal" href="#methods-and-attributes">Methods and attributes</a></li>
+<li><a class="reference internal" href="#nomenclature">Nomenclature</a></li>
 </ul>
 </li>
 </ul>
 
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="index.html"
-                                  title="previous chapter">Concurrency control with django-locking</a></p>
-            <h4>Next topic</h4>
-            <p class="topless"><a href="changelog.html"
-                                  title="next chapter">Changelog</a></p>
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="_sources/api.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Concurrency control with django-locking</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="changelog.html"
+                        title="next chapter">Changelog</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/api.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -247,7 +260,7 @@ unlock the object.</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="modindex.html" title="Global Module Index"
+          <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="changelog.html" title="Changelog"
@@ -255,12 +268,12 @@ unlock the object.</p>
         <li class="right" >
           <a href="index.html" title="Concurrency control with django-locking"
              >previous</a> |</li>
-        <li><a href="index.html">django-locking v0.2 documentation</a> &raquo;</li> 
+        <li><a href="index.html">django-locking v0.3 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2010, Stijn Debrouwere.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+        &copy; Copyright 2010, Stijn Debrouwere.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
     </div>
   </body>
 </html>

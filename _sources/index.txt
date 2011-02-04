@@ -1,12 +1,15 @@
+=======================================
 Concurrency control with django-locking
 =======================================
 
 ``django-locking`` makes sure no two users can edit the same content at the same time, preventing annoying overwrites and lost time. Find the repository and download the code at http://github.com/stdbrouw/django-locking
 
+``django-locking`` has only been tested on Django 1.2 and 1.3, but probably works from 1.0 onwards.
+
 The low-down
 ------------
 
-Django has seen great adoption in the content management sphere, especially among the newspaper crowd. One of the trickier things to get right, is to make sure that nobody steps on each others toes while editing and modifying existing content. Newspaper editors might not always be aware of what other editors are up to, and this goes double for distributed teams. When different people work on the same content, the one who saves last will win the day, while the other edits are overwritten.
+Django has seen great adoption in the content management sphere, especially among the newspaper crowd. One of the trickier things to get right, is to make sure that nobody steps on each other's toes while editing and modifying existing content. Newspaper editors might not always be aware of what other editors are up to, and this goes double for distributed teams. When different people work on the same content, the one who saves last will win the day, while the other edits are overwritten.
 
 ``django-locking`` **provides a system that makes concurrent editing impossible, and informs users of what other users are working on and for how long that content will remain locked. Users can still read locked content, but cannot modify or save it.**
 
@@ -36,10 +39,10 @@ Do note that, in the context of this application, 'locking' means preventing con
 
 .. __: http://github.com/f4nt/django-granular-permissions
 
-Beta!
-'''''
+Code quality
+''''''''''''
 
-While ``django-locking`` has seen a little production use and has a fair amount of unit-tests, please be advised that at this moment it is still beta-quality software. However, I'm quite responsive when it comes to the `GitHub issue tracker`__, and you should also feel free to contact me more directly, either `through GitHub or by e-mailing`__.
+``django-locking`` has seen a fair bit of production use and is well unit-tested. If you spot any bugs, please contact the author through the `GitHub issue tracker`__, or more directly `through GitHub or over e-mail`__.
 
 .. __: http://github.com/stdbrouw/django-locking/issues
 

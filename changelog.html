@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -5,21 +6,22 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Changelog &mdash; django-locking v0.2 documentation</title>
+    <title>Changelog &mdash; django-locking v0.3 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '#',
-        VERSION:     '0.2',
-        COLLAPSE_MODINDEX: false,
+        URL_ROOT:    '',
+        VERSION:     '0.3',
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="django-locking v0.2 documentation" href="index.html" />
+    <link rel="top" title="django-locking v0.3 documentation" href="index.html" />
     <link rel="next" title="About this project" href="credits.html" />
     <link rel="prev" title="The public API" href="api.html" /> 
   </head>
@@ -31,15 +33,15 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="modindex.html" title="Global Module Index"
-             accesskey="M">modules</a> |</li>
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="credits.html" title="About this project"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="api.html" title="The public API"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">django-locking v0.2 documentation</a> &raquo;</li> 
+        <li><a href="index.html">django-locking v0.3 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -51,12 +53,14 @@
   <div class="section" id="changelog">
 <h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="pending">
-<h2>0.3 (pending)<a class="headerlink" href="#pending" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li>hard locks and soft locks (see <a class="reference external" href="design.html"><em>Design considerations</em></a>)</li>
-<li>improved the test coverage with web client tests</li>
-<li>more docstrings and more documentation in general</li>
-</ul>
+<h2>1.0 (pending)<a class="headerlink" href="#pending" title="Permalink to this headline">¶</a></h2>
+<p>V hard locks and soft locks (see <a class="reference internal" href="design.html"><em>Design considerations</em></a>)
+* improve the test coverage with web client tests
+* more docstrings and more documentation in general
+* i18n: Dutch translation
+* manual overrides by admins (in the UI)
+* enhance the warning dialog users see five minutes prior to expiry, to allow users to renew their lock
+* make it so that locks do not trigger the <tt class="docutils literal"><span class="pre">auto_now</span></tt> or <tt class="docutils literal"><span class="pre">auto_now_add</span></tt> behavior of DateFields and DateTimeFields</p>
 </div>
 <div class="section" id="id1">
 <h2>0.2<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
@@ -83,40 +87,40 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-            <h3><a href="index.html">Table Of Contents</a></h3>
-            <ul>
-<li><a class="reference external" href="#">Changelog</a><ul>
-<li><a class="reference external" href="#pending">0.3 (pending)</a></li>
-<li><a class="reference external" href="#id1">0.2</a></li>
-<li><a class="reference external" href="#id2">0.1</a></li>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Changelog</a><ul>
+<li><a class="reference internal" href="#pending">1.0 (pending)</a></li>
+<li><a class="reference internal" href="#id1">0.2</a></li>
+<li><a class="reference internal" href="#id2">0.1</a></li>
 </ul>
 </li>
 </ul>
 
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="api.html"
-                                  title="previous chapter">The public API</a></p>
-            <h4>Next topic</h4>
-            <p class="topless"><a href="credits.html"
-                                  title="next chapter">About this project</a></p>
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="_sources/changelog.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="api.html"
+                        title="previous chapter">The public API</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="credits.html"
+                        title="next chapter">About this project</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/changelog.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -128,7 +132,7 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="modindex.html" title="Global Module Index"
+          <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="credits.html" title="About this project"
@@ -136,12 +140,12 @@
         <li class="right" >
           <a href="api.html" title="The public API"
              >previous</a> |</li>
-        <li><a href="index.html">django-locking v0.2 documentation</a> &raquo;</li> 
+        <li><a href="index.html">django-locking v0.3 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2010, Stijn Debrouwere.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+        &copy; Copyright 2010, Stijn Debrouwere.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
     </div>
   </body>
 </html>

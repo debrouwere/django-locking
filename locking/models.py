@@ -13,6 +13,9 @@ class ObjectLockedError(IOError):
     pass
 
 class LockableModel(models.Model):
+    """ LockableModel comes with three managers: ``objects``, ``locked`` and 
+    ``unlocked``. They do what you'd expect them to. """
+
     objects = managers.Manager()
     locked = managers.LockedManager()
     unlocked = managers.UnlockedManager()

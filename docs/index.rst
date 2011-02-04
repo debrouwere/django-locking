@@ -1,9 +1,10 @@
+=======================================
 Concurrency control with django-locking
 =======================================
 
 ``django-locking`` makes sure no two users can edit the same content at the same time, preventing annoying overwrites and lost time. Find the repository and download the code at http://github.com/stdbrouw/django-locking
 
-``django-locking`` has only been tested with Django 1.2, but probably works from 1.0 onwards.
+``django-locking`` has only been tested on Django 1.2 and 1.3, but probably works from 1.0 onwards.
 
 The low-down
 ------------

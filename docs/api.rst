@@ -40,6 +40,8 @@ And we can unlock again. Although it's possible to force an unlock, it's better 
     True
     >>> story.save()
 
+Additionally, the LockableModel class defines three `managers <http://docs.djangoproject.com/en/dev/topics/db/managers/>`_: ``objects``, ``locked`` and ``unlocked``, that unsurprisingly give you access to, respectively, all objects, locked objects and unlocked objects.
+
 Methods and attributes
 ----------------------
 

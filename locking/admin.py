@@ -70,4 +70,4 @@ class LockableAdmin(admin.ModelAdmin):
             return ''
     lock.allow_tags = True
     
-    list_display = ('lock', )
+    list_display = ('__str__', 'lock')

@@ -9,12 +9,12 @@ The public API
 Running the test suite
 ----------------------
 
-Running the test suite to ``django-locking`` is as easy as adding ``locking`` and ``locking.tests`` to your ``INSTALLED_APPS`` in ``settings.py``, and running ``python manage.py test locking``.
+Before running the test suite, make sure you've added ``locking`` and ``locking.tests`` to your ``INSTALLED_APPS`` in ``settings.py``. Also add ``(r'^ajax/admin/', include(locking.urls)),`` to your urlconf (don't forget ``import locking``). You may then run the test suite using ``python manage.py test locking``.
 
 Building the documentation
 --------------------------
 
-Building the documentation can be done by simply cd'ing to the ``/docs`` directory and executing ``make build html``. The documentation for Sphinx (the tool used to build the documentation) can be found here__, and a reStructured Text primer, which explains the markup language can be found here__.
+Building the documentation can be done by cd'ing to the ``/docs`` directory and executing ``make build html``. The documentation for Sphinx (the tool used to build the documentation) can be found here__, and a reStructured Text primer, which explains the markup language can be found here__.
 
 .. __: http://sphinx.pocoo.org/index.html
 

@@ -1,3 +1,5 @@
+VERSION = (0, 3, 0)
+
 from django.conf import settings
 import logging
 import urls

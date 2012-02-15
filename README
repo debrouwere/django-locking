@@ -1,7 +1,7 @@
-Unmaintained
-------------
+New maintainer and repo
+-----------------------
 
-This Django app has been without a maintainer since 2011/04. Contact me if you'd like me to point to your fork as the new authoritative repo.
+This repository is out of date. Find the new authoritative repo at https://github.com/RobCombs/django-locking
 
 What the heck is this?
 ----------------------
